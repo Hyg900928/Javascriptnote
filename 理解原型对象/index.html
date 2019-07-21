@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>理解原型对象</title>
+</head>
+<body>
+    
+</body>
+</html>
+<script>
+    // prototype 是一个指针， 指向一个对象。
+    // prototype 就是通过调用构造函数而创建的那个实例对象的原型对象的
+
+
+    // 只要创建了一个函数， 就会根据一组特定的规则为该函数创建一个prototype 属性， 这个属性指向该函数的原型对象。
+    // 默认情况下，所有的原型对象都会获得一个constructor（构造函数）属性
+    function Person() {
+
+    }
+    // Person.prototype.name = 'zhangsan'
+    // Person.prototype.age = 20;
+    // Person.prototype.job = 'Softwar Engineer'
+    // Person.prototype.sayName = function() {
+    //     alert(this.name)
+    // }
+
+    // var person1 = new Person()
+    // var person2 = new Person()
+    // console.log(person1)
+    // var prototype = Object.getPrototypeOf(person1)
+
+    // var prototypeDescriptor = Object.getOwnPropertyDescriptor(prototype)
+    // console.log(prototypeDescriptor)
+    // console.log(person1.hasOwnProperty('name'))
+
+    // 判断属性是实例的属性还是原型对象的属性
+    // 此方法用来判断属性是否是原型属性
+    function hasPrototypeProperty(object, name) {
+        return !object.hasOwnProperty(name) && (name in object)
+    }
+
+    // 使用对象字面量来重写原型对象
+    Person.prototype = {
+        name: 'zhangsan',
+        age: 20,
+        job: 'Software Engineer',
+        sayName: function() {
+            console.log(this.name)
+        }
+    }
+    // 由于原型对象，都有一个默认的constructor属性，这个属性指向构造函数
+    // 可以使用Object.defineProperty(), 用这个方法来定义属性主要是因为constructor属性本身是不可枚举的
+    Object.defineProperty(Person.prototype, 'constructor', {
+        enumerable: false,
+        value: Person
+    
+    })
+
+    var friend = new Person()
+    console.log(friend)
+
+    String.prototype.startsWiths = function(text) {
+        return this.indexOf(text) == 0
+
+    }
+    var msg = "Hello world"
+    // console.log(msg.startsWiths('Hello'))
+    // 寄生构造函数模式
+    function SpecialArray() {
+        var values = new Array()
+        values.push.apply(values, arguments)
+        values.toPipedString = function() {
+            return this.join('|')
+        }
+        return values
+    }
+
+    var colors = new SpecialArray('red', 'blue', 'green')
+    console.log(colors instanceof String)
+    
+    console.log(colors.toPipedString())
+
+
+</script>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Javascript设计模式《单例模式》</title>
+</head>
+<body>
+    <button id="loginBtn">登录</button>
+</body>
+</html>
+<script>
+    // 单例模式的定义： 保证一个类仅有一个实例，并且提供一个访问全局访问点。
+
+    var Singleton = function(name) {
+        this.name = name;
+        this.instance = null;
+
+    }
+
+    Singleton.prototype.getName = function(name) {
+        alert(this.name)
+    }
+
+    Singleton.getInstance = function(name) {
+        if(!this.instance) {
+            this.instance = new Singleton(name)
+        }
+        return this.instance
+    }
+    var a = Singleton.getInstance('seven1')
+    var b = Singleton.getInstance('seven2')
+    // console.log(a)
+    // console.log(a === b)
+
+    // 用代理实现单例模式
+
+    var CreateDiv = function(html) {
+        this.html = html;
+        this.init()
+    }
+    CreateDiv.prototype.init = function() {
+        var div = document.createElement('div')
+        div.innerHTML = this.html;
+        document.body.appendChild(div)
+    }
+
+    var ProxySingletonCreateDiv = (function() {
+        var instance
+        return function(html) {
+            if(!instance) {
+                instance = new CreateDiv(html)
+            }
+            return instance
+        }
+    })()
+
+    // console.log(ProxySingletonCreateDiv)
+    var a1 = new ProxySingletonCreateDiv('seven1')
+    var b1 = new ProxySingletonCreateDiv('seven2')
+
+    // console.log(a1 === b1)
+    // 使用闭包封装私有变量
+    var user = (function() {
+        var _name = 'seven',
+            _age = 29;
+        return {
+            getUserInfo: function() {
+                return _name + '-' + _age
+            }
+        }
+
+    })()
+    // console.log(user)
+
+    // 惰性单例模式： 在需要的时候，在创建对象实例
+
+    // var createLoginLayer = (function() {
+    //     var div 
+    //     return function() {
+    //         if(!div) {
+    //             div = document.createElement('div')
+    //             div.innerHTML = '我是登录悬窗';
+    //             div.style.display = 'none';
+    //             document.body.appendChild(div)
+    //         }
+    //         return div
+    //     }
+    // })()
+
+    // document.getElementById('loginBtn').onclick = function() {
+    //     var loginLayer = createLoginLayer()
+    //     loginLayer.style.display = 'block'
+    // }
+
+    // 通用的单例模式
+    // 将管理单例的逻辑单独剥离出来，进行封装
+    var getSingle = function(fn) {
+        var result
+        return function() {
+            console.log(...arguments) 
+            return result || (result = fn.apply(this, arguments))
+        }
+    }
+    // 创建对象逻辑
+    var createLoginLayer = function() {
+        var div = document.createElement('div')
+        div.innerHTML = '我是登录浮窗'
+        div.style.display = 'none';
+        document.body.appendChild(div)
+        return div;
+    }
+
+    var createSingeltonLoginLayer = getSingle(createLoginLayer)
+    document.getElementById('loginBtn').onclick = function() {
+        var loginLayer = createSingeltonLoginLayer('dddd')
+        loginLayer.style.display = 'block'
+    }
+
+    // 创建唯一的iframe 用于动态加载第三方页面
+    var createSingleIframe = getSingle(function() {
+        var iframe = document.createElement('iframe')
+        document.body.appendChild(iframe)
+        return iframe
+    })
+    // document.getElementById('loginBtn').onclick = function() {
+    //     var loginLayer = createSingleIframe()
+    //     loginLayer.src = 'http://baidu.com'
+    // }
+
+
+
+</script>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>原型链继承</title>
+</head>
+<body>
+    
+</body>
+</html>
+<script>
+    function SuperType() {
+        this.property = true
+    }
+
+    SuperType.prototype.getSuperValue = function() {
+        return this.property
+    }
+    function SubType() {
+        this.subproperty = false
+    }
+    SubType.prototype = new SuperType()
+    SubType.prototype.getSubValue = function() {
+        return this.subproperty
+    }
+    var instance = new SubType()
+    console.log(instance)
+
+    // 确定原型与实例的关系
+    // 第一种是使用instanceof 操作符，
+    // 只要用这个操作符来测试实例与原型链中出现过的构造函数，结果就会返回true
+    console.log(instance instanceof Object)  //true
+    console.log(instance instanceof SuperType) // true
+    console.log(instance instanceof SubType) // true
+
+    // 第二种方法
+    // 使用isPrototypeOf() 方法， 只要是原型链中出现过的原型，都可以说是gai
+    console.log(Object.prototype.isPrototypeOf(instance)) // true
+    console.log(SuperType.prototype.isPrototypeOf(instance)) // true
+    console.log(SubType.prototype.isPrototypeOf(instance)) // true
+
+    // 借用构造函数
+    // function SuperType2() {
+    //     this.colors = ['red', 'blue', 'green']
+    // }
+    // function SubType2() {
+    //     SuperType.call(this)
+    // }
+    // var instance2 = new SubType2()
+    // instance2.colors.push('black')
+
+
+    // 传递参数
+    // function SuperType2(name) {
+    //     this.name = name
+    // }
+    // function SubType2() {
+    //     // 继承了SuperType, 同时还传了参数
+    //     SuperType.call(this, 'Nicholas')
+    //     this.age = 29
+    // }
+    // var instance2 = new SubType2()
+
+    // 组合继承
+    
+    
+    
+</script>

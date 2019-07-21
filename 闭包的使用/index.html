@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>闭包的使用</title>
+</head>
+<body>
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+
+    <button id="execute">打开电视机</button>
+    <button id="undo">关闭电视机</button>
+</body>
+</html>
+<script>
+    // 6种基本数据类型 Undefined Null Boolean Number String Symbol
+
+
+    
+    var nodes = document.getElementsByTagName('div')
+    for(var i = 0; i < nodes.length; i++) {
+        (function(i) {
+            nodes[i].onclick = function() {
+                alert(i)
+            }
+        })(i)
+    }
+
+    // 下面的代码也是使用闭包结构
+    var Type = {}
+    for(var i = 0, type; type = ['String', 'Array', 'Number' ][i++];) {
+        (function(type) {
+            console.log(type)
+            Type['is' + type] = function(obj) {
+                return Object.prototype.toString.call(obj) === '[object ' + type +']'
+            }
+        })(type)
+    }
+    console.log(Type)
+    var bol = Type.isArray([1,2])
+    console.log(bol)
+
+    // 使用闭包封装变量
+    
+    var mult = (function() {
+        var cache = {}
+        // 封闭calculate函数
+        var calculate = function() {
+            var a = 1;
+            for(var i = 0, l = arguments.length; i < l; i++ ) {
+                a = a * arguments[i]
+            }
+            return a
+        }
+        return function() {
+            var args = Array.prototype.join.call(arguments, ',')
+            console.log(args)
+            if(args in cache) {
+                return cache[args]
+            }
+            return cache[args] = calculate.apply(null, arguments)
+        }
+    })()
+    
+    var res = mult(1,2,3)
+    console.log('res', res)
+
+    // 使用闭包延长局部变量的寿命
+    // img对象经常用于进行数据上报
+    // 由于img 是局部对象，函数运行完后 就会销毁，这时候请求有可能还没完成，就会造成数据丢失的情况。
+    var report = function(src) {
+        var img = new Image()
+        img.src = src
+    }
+    // report('http://xxx.com/getUserInfo')
+   
+    // 延长img 变量的寿命
+    var report2 = (function() {
+        var imgs = []
+        return function(src) {
+            var img = new Image()
+            imgs.push(img)
+            img.src = src
+        }
+    })()
+
+    // 闭包和面向对象设计
+    // 用闭包实现
+    var extent = function() {
+        var value = 0;
+        return {
+            call: function() {
+                value++;
+                console.log(value)
+            }
+        }
+    }
+    var extent = extent()
+    extent.call() // 1
+    extent.call() // 2
+    extent.call() // 3
+
+    // 使用面向对象实现
+    var extent2 = {
+        value: 0,
+        call: function() {
+            this.value++;
+            console.log(this.value)
+        }
+    }
+    extent2.call()  // 1
+    extent2.call()  // 2
+    extent2.call()  // 3
+
+    // 用闭包实现命令模式
+    // 面向对象方式
+    // 此时的接收者，被当成对象的属性保存起来
+    var Tv = {
+        open: function() {
+            console.log('打开电视机')
+        },
+        close: function() {
+            console.log('关闭电视机')
+        }
+    }
+
+    var OpenTvCommand = function(receiver) {
+        this.receiver = receiver
+    }
+    OpenTvCommand.prototype.execute = function() {
+        this.receiver.open()   // 执行命令，打开电视机
+    }
+    OpenTvCommand.prototype.undo = function() {
+        this.receiver.close()   // 撤销命令，关闭电视机
+    }
+
+    var setCommand = function(command) {
+        document.getElementById('execute').onclick = function() {
+            command.execute()  // 输出打开电视机
+        } 
+        document.getElementById('undo').onclick = function() {
+            command.undo()   // 输出关闭电视机
+        }
+    }
+    // setCommand(new OpenTvCommand(Tv))
+
+    // 闭包方式
+    // 此时的接收者，被封闭在闭包形成的环境中
+    var createCommand = function(receiver) {
+        var execute = function() {
+            return receiver.open()
+        }
+        var undo = function() {
+            return receiver.close()
+        }
+        return {
+            execute: execute,
+            undo: undo
+        }
+    }
+
+    var setCommand2 = function(command) {
+        document.getElementById('execute').onclick = function() {
+            command.execute()  // 输出打开电视机
+        } 
+        document.getElementById('undo').onclick = function() {
+            command.undo()   // 输出关闭电视机
+        }
+    }
+    setCommand2(createCommand(Tv))
+</script>

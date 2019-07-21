@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>代理模式</title>
+</head>
+<body>
+    <input type="checkbox" id='1'>
+    <input type="checkbox" id='2'>
+    <input type="checkbox" id='3'>
+    <input type="checkbox" id='4'>
+    <input type="checkbox" id='5'>
+    <input type="checkbox" id='6'>
+    <input type="checkbox" id='7'>
+    <input type="checkbox" id='8'>
+</body>
+</html>
+<script>
+   
+   var Flower = function() {}
+
+   var xiaoming = {
+       sendFlower: function(target) {
+            // var flower = new Flower()
+            target.receiveFlower()
+       }
+   }
+
+   var B = {
+       receiveFlower: function() {
+        A.lisenGoodMood(function() {
+            var flower = new Flower() // 延迟创建flower对象
+            A.receiveFlower(flower)
+        })
+       }
+   }
+
+   var A = {
+       receiveFlower: function(flower) {
+            console.log('收到花', flower)
+       },
+       lisenGoodMood: function(fn) {
+            setTimeout(function() {
+                fn()
+            }, 1000)
+       }
+   }
+
+   xiaoming.sendFlower(B)
+
+    // 虚拟代理实现图片预加载
+
+    var myImage = (function() {
+        var imgNode = document.createElement('img')
+        document.body.appendChild(imgNode)
+        return {
+            setSrc: function(src) {
+                imgNode.src = src
+            }
+        }
+    })()   
+
+    // 面向对象设计原则
+    /* 
+        单一职责原则，
+        开放-封闭原则
+     */
+    var proxyImage = (function() {
+        var img = new Image()
+        img.onload = function() {
+            console.log('onload')
+            console.log(this)
+            myImage.setSrc(this.src)
+        }
+        return {
+            setSrc: function(src) {
+                // console.log('222')
+                myImage.setSrc('/Users/hyg/Desktop/workspace/javascript设计模式/代理模式/timg.gif')
+                img.src = src
+
+            }
+        }
+
+    })()
+
+    proxyImage.setSrc('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554285303627&di=50a749435fa785716eaadaeaa87b499c&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dshijue1%252C0%252C0%252C294%252C40%2Fsign%3D48c21f419eeef01f591910868897f350%2F3b292df5e0fe9925407ccf753ea85edf8db171a7.jpg')
+
+    // 虚拟代理合并http请求    
+    // 不合并的情况 
+    // 每点击一次，就同步一次文件，会增加服务器的压力
+
+    var synchronousFile = function(id) {
+        console.log('开始同步文件，id为', id)
+    }
+
+    var checkbox = document.getElementsByTagName('input')
+    // for(let i = 0, c; c = checkbox[i++]; i < checkbox.length) {
+    //     c.onclick = function() {
+    //         if(this.checked === true) {
+    //             synchronousFile(this.id)
+    //         }
+    //     }
+    // }
+
+    // 合并请求
+
+    var proxySyncchronousFile = (function() {
+        var cache = [], // 保存一段时间内需要同步的id
+            timer;      // 定时器
+
+        return function(id) {
+            cache.push(id)
+            if(timer) {
+                return
+            }
+            timer = setTimeout(function() {
+                synchronousFile(cache.join(',')) // 2秒后向本体发送需要同步的id结合
+                clearTimeout(timer)
+                timer = null;
+                cache.length = 0  // 清空id集合
+            }, 2000)
+        }
+    })()
+
+    for(let i = 0; c = checkbox[i++]; i < checkbox.length) {
+        c.onclick = function() {
+            if(this.checked === true) {
+                proxySyncchronousFile(this.id)
+            }
+        }
+    }
+
+    // 缓存代理
+    // 缓存代理可以为一些开销大的运算提供暂时的存储，在下次运算时，如果传进来的参数跟之前的一致， 则可以直接返回前面存储的运算结果
+
+    // 计算乘积
+    var mult = function() {
+        console.log('开始计算乘积')
+        var a = 1;
+        for( let i = 0, l = arguments.length; i < l; i++) {
+            a = a * arguments[i]
+        }
+        return a
+    }
+
+    // 加入缓存代理
+    var proxyMult = (function() {
+        var cache = {}
+        return function() {
+            var args = Array.prototype.join.call(arguments, ',')
+            if(args in cache) {
+                return cache[args]
+            }
+            return cache[args] = mult.apply(this, arguments)
+        }
+    })()
+   var res =  proxyMult(1, 2, 3, 4)
+   var res2 =  proxyMult(1, 2, 3, 4) // 不会走计算函数
+    // console.log(res)
+
+    // 用高阶函数动态创建代理
+    // 创建缓存代理的工厂
+    var createProxyFactory = function(fn) {
+        var cache = {}
+        return function() {
+            var args = Array.prototype.join.call(arguments, ',')
+            if(args in cache) {
+                return cache[args]
+            }
+            return cache[args] = fn.apply(this, arguments)
+        }
+    }
+
+    var proxyMult2 = createProxyFactory(mult)
+
+    var res2 = proxyMult2(2, 3, 4)
+
+    console.log(res2)
+
+
+</script>
