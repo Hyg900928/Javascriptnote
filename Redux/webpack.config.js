@@ -2,7 +2,7 @@ const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const resolve = (dir) => path.join(__dirname, '..', dir);
+const resolve = (dir) => path.join(__dirname, dir);
 
 const config = {
     mode: 'development',

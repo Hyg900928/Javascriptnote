@@ -1,3 +1,5 @@
 Redux/node_modules
 Redux/package-lock.json
 .idea
+lodash/package-lock.json
+lodash/node_modules

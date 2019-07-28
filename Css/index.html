@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>css阻塞</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      h1 {
+        color: red !important
+      }
+    </style>
+    <script>
+      function h () {
+        console.log(document.querySelectorAll('h1'))
+      }
+      setTimeout(h, 0)
+    </script>
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1>这是红色的</h1>
+  </body>
+</html>
+
+<script>
+/* 
+    结果：
+    css 没加载完成之前h1标签并没有显示
+    但是数组不为空（意思就是DOM已经解析完成）
+
+    结论：
+    css 不会阻塞DOM解析
+    但是会阻塞DOM渲染
+
+
+
+
+*/
+
+
+</script>
