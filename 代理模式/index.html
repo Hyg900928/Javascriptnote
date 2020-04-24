@@ -19,23 +19,23 @@
 </html>
 <script>
    
-   var Flower = function() {}
+   var Flower = function() {};
 
    var xiaoming = {
        sendFlower: function(target) {
             // var flower = new Flower()
             target.receiveFlower()
        }
-   }
+   };
 
    var B = {
        receiveFlower: function() {
         A.lisenGoodMood(function() {
-            var flower = new Flower() // 延迟创建flower对象
+            var flower = new Flower(); // 延迟创建flower对象
             A.receiveFlower(flower)
         })
        }
-   }
+   };
 
    var A = {
        receiveFlower: function(flower) {
@@ -46,21 +46,21 @@
                 fn()
             }, 1000)
        }
-   }
+   };
 
-   xiaoming.sendFlower(B)
+   xiaoming.sendFlower(B);
 
     // 虚拟代理实现图片预加载
 
     var myImage = (function() {
-        var imgNode = document.createElement('img')
-        document.body.appendChild(imgNode)
+        var imgNode = document.createElement('img');
+        document.body.appendChild(imgNode);
         return {
             setSrc: function(src) {
                 imgNode.src = src
             }
         }
-    })()   
+    })();
 
     // 面向对象设计原则
     /* 
@@ -68,22 +68,22 @@
         开放-封闭原则
      */
     var proxyImage = (function() {
-        var img = new Image()
+        var img = new Image();
         img.onload = function() {
-            console.log('onload')
-            console.log(this)
+            console.log('onload');
+            console.log(this);
             myImage.setSrc(this.src)
-        }
+        };
         return {
             setSrc: function(src) {
                 // console.log('222')
-                myImage.setSrc('/Users/hyg/Desktop/workspace/javascript设计模式/代理模式/timg.gif')
+                myImage.setSrc('./timg.gif');
                 img.src = src
 
             }
         }
 
-    })()
+    })();
 
     proxyImage.setSrc('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554285303627&di=50a749435fa785716eaadaeaa87b499c&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dshijue1%252C0%252C0%252C294%252C40%2Fsign%3D48c21f419eeef01f591910868897f350%2F3b292df5e0fe9925407ccf753ea85edf8db171a7.jpg')
 
@@ -95,7 +95,7 @@
         console.log('开始同步文件，id为', id)
     }
 
-    var checkbox = document.getElementsByTagName('input')
+    var checkbox = document.getElementsByTagName('input');
     // for(let i = 0, c; c = checkbox[i++]; i < checkbox.length) {
     //     c.onclick = function() {
     //         if(this.checked === true) {

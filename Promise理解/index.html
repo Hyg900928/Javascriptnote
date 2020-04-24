@@ -57,34 +57,34 @@
               .catch(onRejected)
      */
 
-    function taskA() {
-        console.log(x)
-        console.log('task A')
-        // throw new Error('hello world')
-
-    }
-    function taskB() {
-        console.log('task B')
-    }
-
-    function onRejectedA(error) {
-        console.log('Catch Error: A ', error)
-    }
-    function onRejectedB(error) {
-        console.log('Catch Error:  B', error)
-    }
-
-    function finalTask() {
-        console.log('final task')
-    }
-    var promise2 = Promise.resolve()
-
-    promise2
-        .then(taskA)
-        .catch(onRejectedA)
-        .then(taskB)
-        .catch(onRejectedB)
-        .then(finalTask)
+    // function taskA() {
+    //     console.log(x)
+    //     console.log('task A')
+    //     // throw new Error('hello world')
+    //
+    // }
+    // function taskB() {
+    //     console.log('task B')
+    // }
+    //
+    // function onRejectedA(error) {
+    //     console.log('Catch Error: A ', error)
+    // }
+    // function onRejectedB(error) {
+    //     console.log('Catch Error:  B', error)
+    // }
+    //
+    // function finalTask() {
+    //     console.log('final task')
+    // }
+    // var promise2 = Promise.resolve()
+    //
+    // promise2
+    //     .then(taskA)
+    //     .catch(onRejectedA)
+    //     .then(taskB)
+    //     .catch(onRejectedB)
+    //     .then(finalTask)
 
     // 这个例子, 下面catch 里面的代码不会执行
     // 因为promise 状态一旦改变就会凝固,不会在改变.
@@ -149,12 +149,30 @@
     //     console.log(values);
     // });
 
-    const delay = (time) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve()
-            }, time)
-        })
-    }
-    delay(100)
+    // const delay = (time) => {
+    //     return new Promise((resolve, reject) => {
+    //         setTimeout(() => {
+    //             resolve()
+    //         }, time)
+    //     })
+    // }
+    // delay(100)
+
+
+    // 返回p2的状态由p1决定, p2后面的then语句都变成对后者p1
+    const p1 = new Promise(function (resolve, reject) {
+      setTimeout(() => reject(new Error('fail')), 3000)
+    });
+
+    const p2 = new Promise(function (resolve, reject) {
+      setTimeout(() => resolve(p1), 1000)
+    });
+
+    p2
+      .then(result => console.log('result', result))
+      .then((res) => {
+        console.log('res', res)
+      } ,(err) => {
+        console.log('err', err)
+      })
 </script>
