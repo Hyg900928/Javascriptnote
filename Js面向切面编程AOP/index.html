@@ -1,53 +1,52 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Js面向切面编程AOP</title>
-</head>
-<body>
-
-</body>
+  </head>
+  <body></body>
 </html>
 
 <script>
-    Function.prototype.before = function(beforeFn) {
-
-      const self = this;
-      return function() {
-        console.log('this', this); // window
-        if(beforeFn.apply(this, arguments) === false) {
-
-          return false
-        }
-        return self.apply(this, arguments)
+  Function.prototype.before = function(beforeFn) {
+    const self = this;
+    return function() {
+      console.log('this', this); // window
+      if (beforeFn.apply(this, arguments) === false) {
+        return false;
       }
+      return self.apply(this, arguments);
     };
+  };
 
-    Function.prototype.after = function(afterFn) {
-      const self = this;
-      return function() {
-        const ret = self.apply(this, arguments);
-        if(ret === false) {
-          return false;
-        }
-        afterFn.apply(this, arguments);
-        return ret
+  Function.prototype.after = function(afterFn) {
+    const self = this;
+    return function() {
+      const ret = self.apply(this, arguments);
+      if (ret === false) {
+        return false;
       }
+      afterFn.apply(this, arguments);
+      return ret;
     };
+  };
 
-    let func = () => {
-      console.log('1')
-    };
+  let func = () => {
+    console.log('1');
+  };
 
-   func= func.before(() => {
-      console.log('222')
-    }).after(() => {
-      console.log('333')
-   });
+  func = func
+    .before(() => {
+      console.log('222');
+    })
+    .after(() => {
+      console.log('333');
+    });
 
-    func()
-
+  func();
 </script>

@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-</head>
+  </head>
 
-<body>
-
-</body>
-
+  <body></body>
 </html>
 <script>
-   /*  async function async1() {
+  /*  async function async1() {
         console.log('async1 start');
         await async2();
         console.log('async1 end');
@@ -34,19 +30,16 @@
         console.log('promise2');
     });
     console.log('script end'); */
-    var arr = [ [1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14] ] ] ], 10];
-    function flattenArr(arr) {
-        const s = new Set()
-        var res = [].concat(...arr)
-        res.forEach(el => s.add(el))
-        
+  var arr = [[1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14]]]], 10];
+  function flattenArr(arr) {
+    const s = new Set();
+    var res = [].concat(...arr);
+    res.forEach(el => s.add(el));
 
-
-        // console.log([...s])
-        return [...s].some(el => Array.isArray(el)) ? flattenArr([...s]).sort((a, b) => a -b ) : [...s].sort((a, b) => a-b)
-
-    }
-    console.log(flattenArr(arr))
-
-
+    // console.log([...s])
+    return [...s].some(el => Array.isArray(el))
+      ? flattenArr([...s]).sort((a, b) => a - b)
+      : [...s].sort((a, b) => a - b);
+  }
+  console.log(flattenArr(arr));
 </script>

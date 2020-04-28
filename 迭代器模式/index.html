@@ -1,144 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>迭代器模式</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        body { 
-            width: 100%;
-            height: 100%;
-        }
-        h2 {
-            padding: 15px;
-            margin: 15px 0;
-            background: #fff;
-        }
-        p {
-            padding: 15px;
-            margin-bottom: 15px;
-            font-size: 18px;
-            background: green;
-            color: #fff;
-        }
-    
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      h2 {
+        padding: 15px;
+        margin: 15px 0;
+        background: #fff;
+      }
+      p {
+        padding: 15px;
+        margin-bottom: 15px;
+        font-size: 18px;
+        background: green;
+        color: #fff;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h2>迭代器模式：</h2>
 
     <p>
-        迭代器模式是指提供一种方法顺序访问一个聚合对象中的各个元素，而又不需要暴露该对象的内部表示。迭代器模式可以把迭代的过程从业务逻辑中分离出来，
-        <br />
-        在使用迭代器模式之后，即使不关心对象的内部构造，也可以按顺序的访问其中的每个元素。
-    
+      迭代器模式是指提供一种方法顺序访问一个聚合对象中的各个元素，而又不需要暴露该对象的内部表示。迭代器模式可以把迭代的过程从业务逻辑中分离出来，
+      <br />
+      在使用迭代器模式之后，即使不关心对象的内部构造，也可以按顺序的访问其中的每个元素。
     </p>
     <p>
-        迭代器模式无非就是循环访问聚合对象中的各个元素。
+      迭代器模式无非就是循环访问聚合对象中的各个元素。
     </p>
     <p>
-        迭代器分为内部迭代器和外部迭代器
+      迭代器分为内部迭代器和外部迭代器
     </p>
     <h2>内部迭代器：</h2>
     <p>
-        外界不关心迭代器内部的实现，跟迭代器的交互也仅仅是一次初始调用。
-        <br>
-        这也刚刚好是内部迭代器的缺点。
+      外界不关心迭代器内部的实现，跟迭代器的交互也仅仅是一次初始调用。
+      <br />
+      这也刚刚好是内部迭代器的缺点。
     </p>
     <script>
-
-        // 实现自己的迭代器
-        // 内部迭代器
-        var each = function(ary, callback) {
-            for(let i = 0, l = ary.length; i < l; i++) {
-                callback.call(ary[i], i, ary[i])  // 把下标和元素当作参数传给callback函数
-            }
+      // 实现自己的迭代器
+      // 内部迭代器
+      var each = function(ary, callback) {
+        for (let i = 0, l = ary.length; i < l; i++) {
+          callback.call(ary[i], i, ary[i]); // 把下标和元素当作参数传给callback函数
         }
+      };
 
-        each([1, 2, 3], function(i, n) {
-            console.log(i, n)
-        })
-        
-        
-        // 外部迭代器
-        var Iterator = function(obj) {
-            var current = 0;
-            var next = function() {
-                current += 1;
-            };
-            var isDone = function() {
-                return current >= obj.length;
-            };
-            var getCurrentItem = function() {
-                return obj[current]
-            }
-            return {
-                next,
-                isDone,
-                getCurrentItem,
-                length: obj.length
-            }
+      each([1, 2, 3], function(i, n) {
+        console.log(i, n);
+      });
 
+      // 外部迭代器
+      var Iterator = function(obj) {
+        var current = 0;
+        var next = function() {
+          current += 1;
+        };
+        var isDone = function() {
+          return current >= obj.length;
+        };
+        var getCurrentItem = function() {
+          return obj[current];
+        };
+        return {
+          next,
+          isDone,
+          getCurrentItem,
+          length: obj.length
+        };
+      };
+
+      // 判断两个数组的元素是否相等
+      var compare = function(iterator1, iterator2) {
+        if (iterator1.length !== iterator2.length) {
+          console.log('iterator1和iterator2不相等');
+          return;
         }
-        
-        // 判断两个数组的元素是否相等
-        var compare = function(iterator1, iterator2) {
-            if(iterator1.length !== iterator2.length) {
-                console.log('iterator1和iterator2不相等')
-                return
-            }
-            while(!iterator1.isDone() && !iterator2.isDone()) {
-                console.log('4444')
-                if(iterator1.getCurrentItem() !== iterator2.getCurrentItem()) {
-                    console.log(222)
-                    throw new Error('iterator1和iterator2不相等');
-                }
-                iterator1.next()
-                iterator2.next()
-            }
-            console.log('iterator1和iterator2相等')
-            
+        while (!iterator1.isDone() && !iterator2.isDone()) {
+          console.log('4444');
+          if (iterator1.getCurrentItem() !== iterator2.getCurrentItem()) {
+            console.log(222);
+            throw new Error('iterator1和iterator2不相等');
+          }
+          iterator1.next();
+          iterator2.next();
         }
- 
-        var iterator1 = Iterator([1, 2, 3])
-        var iterator2 = Iterator([1, 2, 5, 4])
-        compare(iterator1, iterator2)
+        console.log('iterator1和iterator2相等');
+      };
 
-        // 倒序迭代器
-        var reverseEach = function(ary, callback) {
-            for(let l = ary.length - 1; l >= 0; l--) {
-                callback(l, ary[l]);
-            }
+      var iterator1 = Iterator([1, 2, 3]);
+      var iterator2 = Iterator([1, 2, 5, 4]);
+      compare(iterator1, iterator2);
+
+      // 倒序迭代器
+      var reverseEach = function(ary, callback) {
+        for (let l = ary.length - 1; l >= 0; l--) {
+          callback(l, ary[l]);
         }
+      };
 
-        reverseEach([0, 1, 2], function(i, n) {
-            console.log(n)
-        })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
+      reverseEach([0, 1, 2], function(i, n) {
+        console.log(n);
+      });
     </script>
-</body>
+  </body>
 </html>

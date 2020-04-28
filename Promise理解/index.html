@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Promise理解</title>
-</head>
+  </head>
 
-<body>
-
-</body>
-
+  <body></body>
 </html>
 <script>
-
-    /* 
+  /* 
         promise 有三个状态
         pending
         fulfilled
@@ -26,23 +21,23 @@
         注意Promise状态, 只能由pengding => fulfilled / rejected, 一旦修改,不能改变
     
      */
-    // Promise 对象的方法
-    /* 
+  // Promise 对象的方法
+  /* 
         then方法,是注册当resolve(成功)/reject(失败)的回调函数
         promise.then(onFulfilled, onRejected)
         then方法返回的也是promise对象, 是异步执行的
      */
 
-    // const promise = new Promise((resove, reject) => {
-    //     resove('fulfilled') // 状态由 pending => fulfilled
-    // })
-    // promise.then(result => {
-    //     console.log(result)
-    // }, reason => { // onRejected不会被调用
+  // const promise = new Promise((resove, reject) => {
+  //     resove('fulfilled') // 状态由 pending => fulfilled
+  // })
+  // promise.then(result => {
+  //     console.log(result)
+  // }, reason => { // onRejected不会被调用
 
-    // })
+  // })
 
-    /*
+  /*
        promise.catch(onRejected)
        相当于
        Promise.then(null, onRejected)
@@ -57,121 +52,122 @@
               .catch(onRejected)
      */
 
-    // function taskA() {
-    //     console.log(x)
-    //     console.log('task A')
-    //     // throw new Error('hello world')
-    //
-    // }
-    // function taskB() {
-    //     console.log('task B')
-    // }
-    //
-    // function onRejectedA(error) {
-    //     console.log('Catch Error: A ', error)
-    // }
-    // function onRejectedB(error) {
-    //     console.log('Catch Error:  B', error)
-    // }
-    //
-    // function finalTask() {
-    //     console.log('final task')
-    // }
-    // var promise2 = Promise.resolve()
-    //
-    // promise2
-    //     .then(taskA)
-    //     .catch(onRejectedA)
-    //     .then(taskB)
-    //     .catch(onRejectedB)
-    //     .then(finalTask)
+  // function taskA() {
+  //     console.log(x)
+  //     console.log('task A')
+  //     // throw new Error('hello world')
+  //
+  // }
+  // function taskB() {
+  //     console.log('task B')
+  // }
+  //
+  // function onRejectedA(error) {
+  //     console.log('Catch Error: A ', error)
+  // }
+  // function onRejectedB(error) {
+  //     console.log('Catch Error:  B', error)
+  // }
+  //
+  // function finalTask() {
+  //     console.log('final task')
+  // }
+  // var promise2 = Promise.resolve()
+  //
+  // promise2
+  //     .then(taskA)
+  //     .catch(onRejectedA)
+  //     .then(taskB)
+  //     .catch(onRejectedB)
+  //     .then(finalTask)
 
-    // 这个例子, 下面catch 里面的代码不会执行
-    // 因为promise 状态一旦改变就会凝固,不会在改变.
-    // 因此promise 一旦fulfilled了, 再抛错,也不会变为rejected了, 就不会被catch了
-    // var promise3 = new Promise((resolve, reject) => {
-    //     resolve()
-    //     throw 'error'
-    // })
-    // promise3.catch(e => {
-    //     console.log(e) //这里不会被执行, 
-    // })
-    // // 下面这个例子, 没有使用catch 捕获then方法里面抛出的错误 如果没有使用catch方法指定处理错误的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应（Chrome会抛错），这是Promise的另一个缺点。
-    // var promise4 = new Promise((resolve, reject) => {
-    //     resolve(x)
-    // })
-    // promise4.then(data => {
-    //     console.log(data)
-    // })
+  // 这个例子, 下面catch 里面的代码不会执行
+  // 因为promise 状态一旦改变就会凝固,不会在改变.
+  // 因此promise 一旦fulfilled了, 再抛错,也不会变为rejected了, 就不会被catch了
+  // var promise3 = new Promise((resolve, reject) => {
+  //     resolve()
+  //     throw 'error'
+  // })
+  // promise3.catch(e => {
+  //     console.log(e) //这里不会被执行,
+  // })
+  // // 下面这个例子, 没有使用catch 捕获then方法里面抛出的错误 如果没有使用catch方法指定处理错误的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应（Chrome会抛错），这是Promise的另一个缺点。
+  // var promise4 = new Promise((resolve, reject) => {
+  //     resolve(x)
+  // })
+  // promise4.then(data => {
+  //     console.log(data)
+  // })
 
-    // var p1 = new Promise((resolve, reject) => {
-    //     setTimeout( function() {
-    //         console.log('fasetPromise')
-    //         resolve('resolve fasePromise')
-    //     },100)
-    // })
-    // var p2 = new Promise((resolve, reject) => {
-    //     setTimeout(function() {
-    //         console.log('slowPromise')
-    //         resolve('resolve slowPromise')
-    //     },1000)
-    // })
+  // var p1 = new Promise((resolve, reject) => {
+  //     setTimeout( function() {
+  //         console.log('fasetPromise')
+  //         resolve('resolve fasePromise')
+  //     },100)
+  // })
+  // var p2 = new Promise((resolve, reject) => {
+  //     setTimeout(function() {
+  //         console.log('slowPromise')
+  //         resolve('resolve slowPromise')
+  //     },1000)
+  // })
 
-    // Promise.race([p1, p2]).then(value => {
-    //     console.log(value)
-    // }).then(val => {
-    //     console.log(val)
-    // })
+  // Promise.race([p1, p2]).then(value => {
+  //     console.log(value)
+  // }).then(val => {
+  //     console.log(val)
+  // })
 
-    // p3 = new Promise((resolve, reject) => {
-    //     setTimeout(resolve, 500, 'three')
-    // })
-    // p4 = new Promise((resolve, reject) => {
-    //     setTimeout(reject, 100, 'four')
-    // })
-    // Promise.race([p3, p4]).then(value => {
-    //     // 不会执行
-    //     console.log('resolve', value)
-    // }, error => {
-    //     console.log('reject', error)
-    // })
-    // var p1 = new Promise(function (resolve, reject) {
-    //     setTimeout(resolve, 3000, "first");
-    // });
-    // var p2 = new Promise(function (resolve, reject) {
-    //     resolve('second');
-    // });
-    // var p3 = new Promise((resolve, reject) => {
-    //     setTimeout(resolve, 1000, "third");
-    // });
+  // p3 = new Promise((resolve, reject) => {
+  //     setTimeout(resolve, 500, 'three')
+  // })
+  // p4 = new Promise((resolve, reject) => {
+  //     setTimeout(reject, 100, 'four')
+  // })
+  // Promise.race([p3, p4]).then(value => {
+  //     // 不会执行
+  //     console.log('resolve', value)
+  // }, error => {
+  //     console.log('reject', error)
+  // })
+  // var p1 = new Promise(function (resolve, reject) {
+  //     setTimeout(resolve, 3000, "first");
+  // });
+  // var p2 = new Promise(function (resolve, reject) {
+  //     resolve('second');
+  // });
+  // var p3 = new Promise((resolve, reject) => {
+  //     setTimeout(resolve, 1000, "third");
+  // });
 
-    // Promise.all([ p2,p1, p3]).then(function (values) {
-    //     console.log(values);
-    // });
+  // Promise.all([ p2,p1, p3]).then(function (values) {
+  //     console.log(values);
+  // });
 
-    // const delay = (time) => {
-    //     return new Promise((resolve, reject) => {
-    //         setTimeout(() => {
-    //             resolve()
-    //         }, time)
-    //     })
-    // }
-    // delay(100)
+  // const delay = (time) => {
+  //     return new Promise((resolve, reject) => {
+  //         setTimeout(() => {
+  //             resolve()
+  //         }, time)
+  //     })
+  // }
+  // delay(100)
 
+  // 返回p2的状态由p1决定, p2后面的then语句都变成对后者p1
+  const p1 = new Promise(function(resolve, reject) {
+    setTimeout(() => reject(new Error('fail')), 3000);
+  });
 
-    // 返回p2的状态由p1决定, p2后面的then语句都变成对后者p1
-    const p1 = new Promise(function (resolve, reject) {
-      setTimeout(() => reject(new Error('fail')), 3000)
-    });
+  const p2 = new Promise(function(resolve, reject) {
+    setTimeout(() => resolve(p1), 1000);
+  });
 
-    const p2 = new Promise(function (resolve, reject) {
-      setTimeout(() => resolve(p1), 1000)
-    });
-
-    p2
-      .then((res) => {
-        console.log('res', res)
-      } ,(err) => {
-        console.log('err', err)
-      })
+  p2.then(
+    res => {
+      console.log('res', res);
+    },
+    err => {
+      console.log('err', err);
+    }
+  );
 </script>

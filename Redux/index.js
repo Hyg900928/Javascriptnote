@@ -1,49 +1,46 @@
-import ReactDOM from 'react-dom'
-import React from 'react'
-import Router from './router'
-import { Provider } from 'react-redux'
+import ReactDOM from 'react-dom';
+import React from 'react';
+import Router from './router';
+import { Provider } from 'react-redux';
 
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware } from 'redux';
 
 // 定义action
-const CHANGE_SCORE = 'CHANGE_SCORE'
+const CHANGE_SCORE = 'CHANGE_SCORE';
 
 // 定义初始state
 const initState = {
-    score: 0.5
-}
+  score: 0.5
+};
 
 // 定义reducer
 const reducer = (state, action) => {
-    switch (action.type) {
-        case CHANGE_SCORE:
-            return { ...state, score: action.score}
-        default:
-            break
-    }
-}
+  switch (action.type) {
+    case CHANGE_SCORE:
+      return { ...state, score: action.score };
+    default:
+      break;
+  }
+};
 
 // 定义中间件
 const logger = ({ getState, dispatch }) => next => action => {
-    console.log('[logger]即将执行', action)
-    
-    // 调用middleware 链中下一个middleware的dispatch
-    let returnValue = next(action)
-    console.log('[logger]执行完成后 state:', getState)
-    return returnValue;
+  console.log('[logger]即将执行', action);
 
-}
+  // 调用middleware 链中下一个middleware的dispatch
+  let returnValue = next(action);
+  console.log('[logger]执行完成后 state:', getState);
+  return returnValue;
+};
 
-const store = createStore(reducer, initState, applyMiddleware(logger))
-
+const store = createStore(reducer, initState, applyMiddleware(logger));
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Router />
-    </Provider>
-    ,
-    document.getElementById('root')
-)
+  <Provider store={store}>
+    <Router />
+  </Provider>,
+  document.getElementById('root')
+);
 // render()
 // store.subscribe(render())
 
@@ -64,6 +61,6 @@ ReactDOM.render(
 // // 这是一个精简版的applyMiddleware
 // const applyMiddleware = middleware => {
 //     let next = store.dispatch;
-    
+
 //     store.dispatch = middleware(store)(next) // 这里传入store, 是因为中间件中有可能会用到getState获取数据, 比如打印用户等需求
-// } 
+// }

@@ -2,35 +2,36 @@
 <html lang="en">
   <head>
     <title>css阻塞</title>
-    <meta charset="UTF-8a">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8a" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         console.log('DOMContentLoaded');
-      })
+      });
     </script>
-    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css" rel="stylesheet">
+    <link
+      href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css"
+      rel="stylesheet"
+    />
     <script>
-        console.log('到我了没')
+      console.log('到我了没');
 
-        function getQuery(name) {
-          const queryString =  window.location.search.substring(1)
-          const vars = queryString.split('&')
-          for(let i = 0; i < vars.length; i++) {
-            var pairs = vars[i].split('=')
-            if(pairs[0] === name) {
-                return pairs[1]
-            }
-            
+      function getQuery(name) {
+        const queryString = window.location.search.substring(1);
+        const vars = queryString.split('&');
+        for (let i = 0; i < vars.length; i++) {
+          var pairs = vars[i].split('=');
+          if (pairs[0] === name) {
+            return pairs[1];
           }
-
-          return false
         }
 
-        var name = getQuery('agea')
-        console.log(name)
+        return false;
+      }
+
+      var name = getQuery('agea');
+      console.log(name);
     </script>
   </head>
-  <body>
-  </body>
+  <body></body>
 </html>

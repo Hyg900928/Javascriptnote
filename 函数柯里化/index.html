@@ -1,82 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>函数柯里化</title>
-</head>
-<body>
-    
-</body>
+  </head>
+  <body></body>
 </html>
 <script>
-    /* 
+  /* 
         currying 又称部分求值
         一个currying函数首先会接收一些参数, 接受了这些参数之后, 该函数不会立即求值,
         而是继续返回另外一个函数
         刚才传入的参数在函数形成的闭包中被保存起来
     */
 
-    // var cost = (function() {
-    //     var args = [];
-        
-    //     return function() {
-    //         if(arguments.length === 0) {
-    //             var money = 0;
-    //             for(let i = 0, l = args.length; i < l; i++) {
-    //                 money += args[i];
-    //             }
-    //             return money;
-    //         } else {
-    //             [].push.apply(args, arguments);
-    //             console.log(args)
-    //         }
-    //     }
-    // })()
-    // cost(100)
-    // cost(200)
-    // cost(300)
-    // const num = cost()
-    // console.log(num)
+  // var cost = (function() {
+  //     var args = [];
 
+  //     return function() {
+  //         if(arguments.length === 0) {
+  //             var money = 0;
+  //             for(let i = 0, l = args.length; i < l; i++) {
+  //                 money += args[i];
+  //             }
+  //             return money;
+  //         } else {
+  //             [].push.apply(args, arguments);
+  //             console.log(args)
+  //         }
+  //     }
+  // })()
+  // cost(100)
+  // cost(200)
+  // cost(300)
+  // const num = cost()
+  // console.log(num)
 
+  // 通用currying
+  var currying = function(fn) {
+    var args = [];
+    return function() {
+      if (arguments.length === 0) {
+        return fn.apply(this, args);
+      } else {
+        [].push.apply(args, arguments);
+        return arguments.callee;
+      }
+    };
+  };
 
-    // 通用currying
-    var currying = function(fn) {
-        var args = [];
-        return function() {
-            if(arguments.length === 0) {
-                return fn.apply(this, args)
-            } else {
-                [].push.apply(args, arguments)
-                return arguments.callee
-            }
-        }
-    }
+  var cost = (function() {
+    var money = 0;
+    return function() {
+      for (let i = 0, l = arguments.length; i < l; i++) {
+        money += arguments[i];
+      }
+      return money;
+    };
+  })();
 
-    var cost = (function() {
-        var money = 0;
-        return function() {
-            for(let i = 0, l = arguments.length; i < l; i++) {
-                money += arguments[i];
-            }
-            return money
-        }
-    })()
+  var cost2 = currying(cost);
 
-    var cost2 = currying(cost)
-    
-    console.log(cost2(300))
-    // console.log(cost2)
-  
-
-
-
-
-
-
-
-
-
+  console.log(cost2(300));
+  // console.log(cost2)
 </script>
