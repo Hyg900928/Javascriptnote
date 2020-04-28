@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>职责链模式</title>
+</head>
+<body>
+
+</body>
+</html>
+
+<script>
+/*
+* 职责链模式
+*
+* 职责链模式目的是为了消除过多的 if else 语句
+*
+* 使用场景有:
+* 分离表单请求和校验
+*
+* */
+
+const order500 = (orderType, pay, stock) => {
+  if(orderType === 1 && pay === true) {
+    console.log('500元定金预购, 得到100优惠券');
+  } else {
+    return 'nextSuccessor';  // 我不知道下一个节点是谁,反正把请求往后面传递
+  }
+};
+
+const order200 = (orderType, pay, stock) => {
+  console.log(orderType, pay, stock)
+  if(orderType === 2 && pay === true) {
+    console.log('200元定金预购, 得到50优惠券');
+  } else {
+    return 'nextSuccessor';  // 我不知道下一个节点是谁,反正把请求往后面传递
+  }
+};
+
+const orderNormal = (orderType, pay, stock) => {
+  if(stock > 0) {
+    console.log('普通购买,无优惠券');
+  } else {
+    console.log('手机库存不足');
+  }
+};
+
+
+class Chain {
+  constructor(fn) {
+    this.fn = fn;
+    this.successor = null;
+  }
+
+  setNextSuccessor(successor) {
+    // 指定在链中的下一个节点
+    this.successor = successor;
+  }
+
+  passRequest() {
+    // 传递请求给下一个节点
+    const ret = this.fn.apply(this, arguments);
+    if(ret === 'nextSuccessor') {
+      return this.successor && this.successor.passRequest.apply(this.successor, arguments);
+    }
+
+    return ret;
+  }
+
+  next() {
+    // 异步职责链,手动传递给职责链中的下一个节点
+    return this.successor && this.successor.passRequest.apply(this.successor, arguments);
+  }
+}
+
+// 把3个订单函数分别包装成职责链的节点
+const chainOrder500 = new Chain(order500);
+const chainOrder200 = new Chain(order200);
+const chainOrderNormal = new Chain(orderNormal);
+
+// 然后指定节点在职责链中的顺序
+chainOrder500.setNextSuccessor(chainOrder200);
+chainOrder200.setNextSuccessor(chainOrderNormal);
+
+// 最后把请求给第一个节点
+// chainOrder500.passRequest(1, true, 500); // 输出: 500元定金预购, 得到100优惠券
+
+
+// 异步职责链俩字
+const fn1 = new Chain(function() {
+  console.log('1');
+  return 'nextSuccessor';
+});
+const fn2 = new Chain(function() {
+  console.log('2');
+  const self = this;
+  console.log('self', self);
+  setTimeout(function() {
+    self.next();
+  }, 1000)
+});
+const fn3 = new Chain(function() {
+  console.log('3')
+});
+
+fn1.setNextSuccessor(fn2);
+fn2.setNextSuccessor(fn3);
+fn1.passRequest();
+
+
+// 采用AOP方式实现职责链
+Function.prototype.after = function(afterFn) {
+  const self = this;
+  return function() {
+    const ret = self.apply(this, arguments);
+    if(ret === 'nextSuccessor') {
+      return afterFn.apply(this, arguments);
+    }
+    return ret;
+  }
+};
+
+const order = order500.after(order200).after(orderNormal);
+// order(2, true, 500)
+
+</script>
