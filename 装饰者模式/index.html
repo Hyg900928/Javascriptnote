@@ -7,8 +7,38 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <title>装饰者模式</title>
   </head>
   <body></body>
 </html>
-<script></script>
+<script>
+  const Plane = function() {};
+  Plane.prototype.fire = function() {
+    console.log('发射普通子弹');
+  };
+
+  //  导弹类
+  const MissleDecorator = function(plane) {
+    this.plane = plane;
+  };
+
+  MissleDecorator.prototype.fire = function() {
+    this.plane.fire();
+    console.log('发射导弹');
+  };
+
+  //  原子弹类
+  const AtomDecorator = function(plane) {
+    this.plane = plane;
+  };
+
+  AtomDecorator.prototype.fire = function() {
+    this.plane.fire();
+    console.log('发射原子弹');
+  };
+
+  let plane = new Plane();
+  plane = new MissleDecorator(plane);
+  plane = new AtomDecorator(plane);
+  plane.fire();
+</script>

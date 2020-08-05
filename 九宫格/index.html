@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>九宫格生成图片</title>
+  </head>
+  <body>
+    <img alt="" id="box" />
+  </body>
+</html>
+<script type="text/javascript" src="./draw.js"></script>
+<script type="text/javascript" src="./point9Scale.js"></script>
+<script type="text/javascript" src="./bookRender.js"></script>
+<script>
+
+  window.onload = function() {
+    var oBox = document.getElementById('box');
+    var targetWidth = 800;
+    var targetHeight = 600;
+    var spainW = 75;
+    var backImages = [
+      './img/back/Back-01.png',
+      './img/back/Back-02.png',
+      './img/back/Back-03.png',
+      './img/back/Back-04.png',
+      './img/back/Back-05.png',
+      './img/back/Back-06.png',
+      './img/back/Back-07.png',
+      './img/back/Back-08.png',
+      './img/back/Back-09.png'
+    ];
+    var spainImages = [
+      './img/spain/Spain-01.png',
+      './img/spain/Spain-02.png',
+      './img/spain/Spain-03.png',
+      './img/spain/Spain-04.png',
+      './img/spain/Spain-05.png',
+      './img/spain/Spain-06.png',
+      './img/spain/Spain-07.png',
+      './img/spain/Spain-08.png',
+      './img/spain/Spain-09.png'
+    ];
+    var coverImages = [
+      './img/cover/Cover-01.png',
+      './img/cover/Cover-02.png',
+      './img/cover/Cover-03.png',
+      './img/cover/Cover-04.png',
+      './img/cover/Cover-05.png',
+      './img/cover/Cover-06.png',
+      './img/cover/Cover-07.png',
+      './img/cover/Cover-08.png',
+      './img/cover/Cover-09.png'
+    ];
+
+    run([
+      {
+        images: backImages,
+        size: {
+          width: targetWidth,
+          height: targetHeight
+        }
+      },
+      {
+        images: spainImages,
+        size: {
+          width: spainW,
+          height: targetHeight
+        }
+      },
+      {
+        images: coverImages,
+        size: {
+          width: targetWidth,
+          height: targetHeight
+        }
+      }],
+      [],
+      function(opt) {
+        oBox.src = opt.data;
+      }
+    );
+  };
+</script>

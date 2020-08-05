@@ -14,12 +14,17 @@
 
 <script>
   Function.prototype.before = function(beforeFn) {
+
+    // 保存原函数的引用
     const self = this;
+
+    // 返回包含了原函数和新函数的"代理"函数
     return function() {
-      console.log('this', this); // window
-      if (beforeFn.apply(this, arguments) === false) {
-        return false;
-      }
+
+      // 执行新函数, 修正this
+      beforeFn.apply(this, arguments);
+
+      // 执行原函数
       return self.apply(this, arguments);
     };
   };
@@ -28,9 +33,6 @@
     const self = this;
     return function() {
       const ret = self.apply(this, arguments);
-      if (ret === false) {
-        return false;
-      }
       afterFn.apply(this, arguments);
       return ret;
     };
@@ -42,6 +44,7 @@
 
   func = func
     .before(() => {
+      console.log(this);
       console.log('222');
     })
     .after(() => {
