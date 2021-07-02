@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Konva Image Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<script>
+
+    function loadImg(src) {
+        return new Promise((resolve, reject) => {
+            const im = new Image();
+            im.onload = () => {
+                resolve(im);
+            }
+            im.src = src;
+        });
+    }
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const stage = new Konva.Stage({
+        container: 'container',
+        width: width,
+        height: height,
+    });
+
+    const layer = new Konva.Layer();
+    stage.add(layer);
+
+    // main API:
+    const imageObj = new Image();
+    imageObj.onload = function () {
+        const yoda = new Konva.Image({
+            x: 0,
+            y: 0,
+            // image: imageObj,
+            // width: 106,
+            // height: 118,
+            sceneFunc: (ctx) => {
+
+                // loadImg('./images/pc1.png').then(img1 => {
+                //
+                // })
+
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.drawImage(imageObj, 0, 0)
+
+                loadImg('./images/mask1.png').then(img2 => {
+                    ctx.globalCompositeOperation = 'destination-atop';
+                    ctx.drawImage(img2, 0, 0)
+
+                })
+            }
+        });
+        layer.add(yoda);
+        const yoda2 = new Konva.Image({
+            x: 700,
+            y: 700,
+            // image: imageObj,
+            // width: 106,
+            // height: 118,
+            sceneFunc: (ctx) => {
+
+                // loadImg('./images/pc1.png').then(img1 => {
+                //
+                // })
+
+                ctx.globalCompositeOperation = 'source-over';
+
+                loadImg('./images/pc2.png').then(img3 => {
+                    ctx.globalCompositeOperation = 'destination-atop';
+                    ctx.drawImage(img3, 0, 0)
+
+                })
+            }
+        });
+
+        // add the shape to the layer
+
+        layer.add(yoda2)
+
+        layer.batchDraw();
+    };
+    imageObj.src = './images/pc1.png';
+
+
+</script>
+</body>
+</html>

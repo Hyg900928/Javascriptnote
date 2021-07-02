@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>canvas mask demo</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        body {
+            mix-width: 100vw;
+            background: linear-gradient(to bottom, powderblue, #369);
+            background: -webkit-linear-gradient(powderblue, #369);
+            background-repeat: no-repeat;
+            min-height: 100vh;
+        }
+        ul {
+            list-style: none;
+            display: flex;
+            margin-bottom: 2em;
+            align-items: center;
+        }
+        ul li {
+            margin-right: 50px;
+            display: flex;
+            align-items: center;
+        }
+        ul img {
+            width: 80px;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li>选择遮罩图形：</li>
+    <li>
+        <input type="radio" name="mask" value="none" data-default="./images/pc1.png" checked>无
+    </li>
+    <li>
+        <input type="radio" name="mask" value="./images/mask1.png" data-default="./images/pc1.png"><img src="./images/mask1.png" alt="">
+    </li>
+    <li>
+        <input type="radio" name="mask" value="./images/mask2.png" data-default="./images/pc2.png"><img src="./images/mask2.png" alt="">
+    </li>
+    <li>
+        <input type="radio" name="mask" value="./images/mask3.png" data-default="./images/pc3.png" data-de="./images/mask-de.png"><img src="./images/mask3.png" alt="">
+    </li>
+</ul>
+<canvas id="canvas"></canvas>
+<script type="text/javascript">
+    const ctx = canvas.getContext('2d');
+    const defaultImg = './images/pc1.png';
+
+    setImage(defaultImg);
+
+    function setDe(src, callback) {
+        ctx.globalCompositeOperation = 'source-over';
+        loadImg(src)
+            .then(img => {
+                ctx.drawImage(img, 0, 0);
+                callback && callback();
+            });
+    }
+
+
+    function setMask(src, callback) {
+        ctx.globalCompositeOperation = 'destination-atop';
+        loadImg(src)
+            .then(img => {
+                ctx.drawImage(img, 0, 0);
+                callback && callback();
+            });
+    }
+
+    function setImage(src, callback) {
+        loadImg(src)
+            .then(img => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                callback && callback();
+            });
+    }
+
+    function loadImg(src) {
+        return new Promise((resolve, reject) => {
+            const im = new Image();
+            im.onload = () => {
+                resolve(im);
+            }
+            im.src = src;
+        });
+    }
+
+    const radios = Array.from(document.querySelectorAll('[name="mask"]'));
+    radios.forEach(r => {
+        r.onclick = function() {
+            const val = event.target.value;
+            const defaultImg = event.target.dataset.default;
+            const maskDe = event.target.dataset.de;
+            if (val === 'none') {
+                setImage(defaultImg);
+            } else {
+                setImage(defaultImg, () => {
+                    setMask(val, () => {
+                        // if (maskDe) {
+                        //     setDe(maskDe);
+                        // }
+                    });
+                });
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

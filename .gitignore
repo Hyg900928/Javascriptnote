@@ -3,3 +3,6 @@ Redux/package-lock.json
 .idea
 lodash/package-lock.json
 lodash/node_modules
+konva/node_modules
+konva/package-lock.json
+konva/yarn.lock

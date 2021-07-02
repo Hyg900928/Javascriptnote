@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+</body>
+</html>
+<script>
+
+    /**
+     * drawImage
+     * image,
+     * sx, 裁切框的x 轴坐标
+     * sy, 裁切框的y 轴坐标
+     * sWidth, 裁切框的宽度
+     * sHeight, 裁切框的高度
+     * dx, 裁切后的图片, 绘制到canvas时的 x轴坐标
+     * dy, 裁切后的图片, 绘制到canvas时的 y轴坐标
+     * dWidth, 裁切后的图片, 需要绘制到canvas 的宽度
+     * dHeight, 裁切后的图片, 需要绘制到canvas 的 高度
+     * @type {HTMLElement}
+     */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.screen.width;
+    canvas.height = window.screen.height;
+    loadImg('./images/test2.jpeg').then(img => {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(img, 0, 0, 960, 800);
+
+
+        loadImg('./images/350-3.png').then(img => {
+            // ctx.globalCompositeOperation = 'destination-atop';
+            const x = (960 - 250) / 2;
+
+            const y = (800 - 350) / 2;
+            ctx.drawImage(img, x, y,  250, 350);
+        })
+
+    })
+
+
+
+
+    function loadImg(src) {
+        return new Promise((resolve, reject) => {
+            const im = new Image();
+            im.onload = () => {
+                resolve(im);
+            }
+            im.src = src;
+        });
+    }
+</script>

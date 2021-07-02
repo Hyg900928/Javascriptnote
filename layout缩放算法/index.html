@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>layout缩放算法demo</title>
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+        .con + .con {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div style="padding: 10px 0;">
+    <p>
+        数据：<select id="source">
+        <option value="rects1">数据1</option>
+        <option value="rects2" selected>数据2</option>
+        <option value="rects3">数据3</option>
+    </select>&nbsp;&nbsp;
+        尺寸：<select id="size">
+        <option value="6602-2398">8X11</option>
+        <option value="8398-3296">11X14</option>
+        <option value="9602-3603">12X16</option>
+    </select>&nbsp;&nbsp;
+        <input type="checkbox" id="kr"> 全部保持比例&nbsp;&nbsp;
+        <input type="checkbox" id="nkr"> 全部不保持比例
+    </p>
+</div>
+<div>
+    <div class="con" id="container"></div>
+</div>
+<script type="text/javascript" src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
+<script type="text/javascript" src="./rects.js"></script>
+<script type="text/javascript">
+    let krs = false;
+    let nkrs = false;
+    let rects = rects2;
+    let sizeArr = [width, height];
+
+    draw(sizeArr[0], sizeArr[1], rects);
+
+    source.onchange = () => {
+        rects = window[source.value];
+        draw(sizeArr[0], sizeArr[1], rects);
+    }
+
+    size.onchange = () => {
+        sizeArr = size.value.split('-');
+        const width = Number(sizeArr[0]), height = Number(sizeArr[1]);
+        draw(width, height, rects);
+    }
+
+    kr.onchange = () => {
+        krs = kr.checked;
+        if (krs) {
+            nkrs = false;
+            nkr.checked = nkrs;
+
+        }
+        draw(sizeArr[0], sizeArr[1], rects);
+    }
+
+    nkr.onchange = () => {
+        nkrs = nkr.checked;
+        if (nkrs) {
+            krs = false;
+            kr.checked = krs;
+
+        }
+        draw(sizeArr[0], sizeArr[1], rects);
+    }
+
+
+    function draw(width, height, rects) {
+
+        let newRects = rects;
+
+        if (krs) {
+            newRects = rects.map(o => {
+                return Object.assign({}, o, {
+                    keepRatio: true
+                });
+            });
+        }
+
+        if (nkrs) {
+            newRects = rects.map(o => {
+                return Object.assign({}, o, {
+                    keepRatio: false
+                });
+            });
+        }
+
+        const stage = new Konva.Stage({
+            container: 'container',
+            width,
+            height,
+            scale: {
+                x: 0.12,
+                y: 0.12
+            }
+        });
+
+        const layer = new Konva.Layer();
+        stage.add(layer);
+
+        layer.add(new Konva.Rect({
+            x: 0,
+            y: 0,
+            width,
+            height,
+            fill: 'black'
+        }));
+
+        newRects.forEach(({ x, y, width: eWidth, height: eHeight, px, py, pw, ph, fill = '#f00', keepRatio = false }) => {
+            if (keepRatio) {
+                const oriPageWidth = x / px;
+                const oriPageHeight = y / py;
+                const oldPageRatio = oriPageWidth / oriPageHeight;
+
+                const newPageRatio = width / height;
+
+                let newWidth = width;
+                let newHeight = width / oldPageRatio;
+
+                if (newPageRatio > oldPageRatio) {
+                    newHeight = height;
+                    newWidth = height * oldPageRatio;
+                }
+
+                const hDiff = (width - newWidth) / 2;
+                const vDiff = (height - newHeight) / 2;
+
+                const rect = new Konva.Rect({
+                    x: newWidth * px + hDiff,
+                    y: newHeight * py + vDiff,
+                    width: newWidth * pw,
+                    height: newHeight * ph,
+                    fill
+                });
+                layer.add(rect);
+            } else {
+                const rect = new Konva.Rect({
+                    x: width * px,
+                    y: height * py,
+                    width: width * pw,
+                    height: height * ph,
+                    fill
+                });
+                layer.add(rect);
+            }
+        });
+        layer.draw();
+    }
+</script>
+</body>
+</html>
