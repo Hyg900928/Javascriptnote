@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>命令模式实现撤销和重做</title>
+  </head>
+  <body>
+    <button id="replay">播放录像</button>
+  </body>
+</html>
+
+<script>
+    const Ryu = {
+      attack: function() {
+        console.log('攻击');
+      },
+      defense: function () {
+        console.log('防御');
+      },
+      jump: function() {
+        console.log('跳跃');
+      },
+      crouch: function() {
+        console.log('蹲下');
+      }
+    };
+
+    // 创建命令
+    const makeCommand = function (receiver, state) {
+      return function () {
+        receiver[state]();
+      }
+    };
+
+    const commands = {
+      "KeyW": "jump", // W 键
+      "KeyS": "crouch", // S 键
+      "KeyA": "defense", // A 键
+      "KeyD": "attack"  // D 键
+    };
+
+    // 保存命令的堆栈
+    const commandStack = [];
+
+    document.onkeypress = function (ev) {
+      const keyCode = ev.code;
+      console.log('keyCode', keyCode);
+      const command = makeCommand(Ryu, commands[keyCode]);
+
+      if(command) {
+        // 执行命令
+        command();
+
+        // 将刚执行的命令保存进堆栈
+        commandStack.push(command);
+      }
+    };
+
+    document.getElementById('replay').onclick = function () {
+      let command;
+      while (command = commandStack.shift()) {
+      // 从堆栈里依次取出命令并执行
+        command();
+      }
+
+    }
+
+
+</script>

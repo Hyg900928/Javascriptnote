@@ -1,8 +1,10 @@
 import React from 'react';
 import Root from './router';
+import { connect } from 'react-redux';
 
 class App extends React.Component {
   render() {
+    console.log('props', this.props);
     return (
       <div>
         <Root />
@@ -10,4 +12,22 @@ class App extends React.Component {
     );
   }
 }
-export default App;
+
+const mapStateToProps = (state) =>{
+  return {
+    ...state
+  }
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onClick: () => {
+      dispatch({
+        type: 'CHANGE_SCORE',
+        score: 0.8
+      })
+    }
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -154,20 +154,36 @@
   // delay(100)
 
   // 返回p2的状态由p1决定, p2后面的then语句都变成对后者p1
-  const p1 = new Promise(function(resolve, reject) {
-    setTimeout(() => reject(new Error('fail')), 3000);
+  // const p1 = new Promise(function(resolve, reject) {
+  //   setTimeout(() => reject(new Error('fail')), 3000);
+  // });
+  //
+  // const p2 = new Promise(function(resolve, reject) {
+  //   setTimeout(() => resolve(p1), 1000);
+  // });
+  //
+  // p2.then(
+  //   res => {
+  //     console.log('res', res);
+  //   },
+  //   err => {
+  //     console.log('err', err);
+  //   }
+  // );
+  let p = Promise.resolve();
+
+  p.then(() => {
+    console.log("then1");
+    Promise.resolve().then(() => {
+      console.log("then1-1");
+    });
+  }).then(() => {
+    console.log("then1-2");
   });
 
-  const p2 = new Promise(function(resolve, reject) {
-    setTimeout(() => resolve(p1), 1000);
+  p.then(() => {
+    console.log("then2");
   });
 
-  p2.then(
-    res => {
-      console.log('res', res);
-    },
-    err => {
-      console.log('err', err);
-    }
-  );
+
 </script>

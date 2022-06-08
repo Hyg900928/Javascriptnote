@@ -39,30 +39,31 @@
   // console.log(num)
 
   // 通用currying
-  var currying = function(fn) {
-    var args = [];
-    return function() {
-      if (arguments.length === 0) {
-        return fn.apply(this, args);
-      } else {
-        [].push.apply(args, arguments);
-        return arguments.callee;
-      }
-    };
-  };
-
-  var cost = (function() {
-    var money = 0;
-    return function() {
-      for (let i = 0, l = arguments.length; i < l; i++) {
-        money += arguments[i];
-      }
-      return money;
-    };
-  })();
-
-  var cost2 = currying(cost);
-
-  console.log(cost2(300));
+  // var currying = function(fn) {
+  //   var args = [];
+  //   return function() {
+  //     if (arguments.length === 0) {
+  //       return fn.apply(this, args);
+  //     } else {
+  //       [].push.apply(args, arguments);
+  //       return arguments.callee;
+  //     }
+  //   };
+  // };
+  //
+  // var cost = (function() {
+  //   var money = 0;
+  //   return function() {
+  //     for (let i = 0, l = arguments.length; i < l; i++) {
+  //       money += arguments[i];
+  //     }
+  //     return money;
+  //   };
+  // })();
+  //
+  // var cost2 = currying(cost);
+  //
+  // console.log(cost2(300));
   // console.log(cost2)
+
 </script>

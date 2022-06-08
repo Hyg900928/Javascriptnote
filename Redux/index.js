@@ -34,7 +34,7 @@ const logger = ({ getState, dispatch }) => next => action => {
 };
 
 const store = createStore(reducer, initState, applyMiddleware(logger));
-
+console.log('store', store);
 ReactDOM.render(
   <Provider store={store}>
     <Router />

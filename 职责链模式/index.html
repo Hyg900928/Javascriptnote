@@ -85,7 +85,7 @@
   chainOrder200.setNextSuccessor(chainOrderNormal);
 
   // 最后把请求给第一个节点
-  chainOrder500.passRequest(3, true, 500); // 输出: 500元定金预购, 得到100优惠券
+  // chainOrder500.passRequest(3, true, 500); // 输出: 500元定金预购, 得到100优惠券
 
   // 异步职责链俩字
   const fn1 = new Chain(function() {
@@ -106,7 +106,7 @@
 
   fn1.setNextSuccessor(fn2);
   fn2.setNextSuccessor(fn3);
-  // fn1.passRequest();
+  fn1.passRequest();
 
   // 采用AOP方式实现职责链
   Function.prototype.after = function(afterFn) {

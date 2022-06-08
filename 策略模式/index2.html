@@ -1,31 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>命令模式</title>
+    <title>策略模式实现缓动动画</title>
     <style>
-      #ball {
-        position: absolute;
-        background: #000;
-        width: 50px;
-        height: 50px;
-        border-radius: 100%;
-      }
+        #div {
+            position: absolute;
+            background: blue;
+            color: #fff;
+        }
+        #btn {
+            margin-top:50px;
+            display: inline-block;
+        }
     </style>
-  </head>
-  <body>
-    <div id="ball"></div>
-    <div style="padding-top: 50px;">
-      <input type="text" id="pos">
-      <button id="moveBtn">开始运动</button>
-      <button id="cancelBtn">取消</button>
-    </div>
-  </body>
+</head>
+<body>
+<div id="div">我是div</div>
+<button id="btn">开始运动</button>
+</body>
 </html>
 <script>
   const tween = {
@@ -123,41 +118,14 @@
     }
   }
 
-  const ball = document.getElementById('ball');
-  const pos = document.getElementById('pos');
-  const moveBtn = document.getElementById('moveBtn');
-  const cancelBtn = document.getElementById('cancelBtn');
+  const div = document.getElementById('div');
+  const btn = document.getElementById('btn');
+  const animate = new Animate(div);
 
-  class MoveCommand {
-    constructor(receiver, pos) {
-      this.receiver = receiver;
-      this.pos = pos;
-      this.oldPos = null;
-    }
 
-    execute() {
-      this.receiver.start('left', this.pos, 1000, 'strongEaseOut');
-
-      // 记录小球开始移动前的位置
-      this.oldPos = this.receiver.dom.getBoundingClientRect()[this.receiver.propertyName];
-    }
-
-    undo() {
-
-      // 回到小球移动前记录的位置
-      this.receiver.start('left', this.oldPos, 1000, 'strongEaseOut')
-    }
-  }
-  let moveCommand;
-
-  moveBtn.onclick = function () {
-    const animate = new Animate(ball);
-    moveCommand = new MoveCommand(animate, pos.value);
-    moveCommand.execute();
+  btn.onclick = function() {
+    animate.start('left', 500, 1000, 'easeIn');
   };
 
-  cancelBtn.onclick = function () {
-    moveCommand.undo();
-  }
 
 </script>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数组扁平化</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+  const arr = [1, 2, [3, 4, [5, 6], [7, 8, [12, 13]]], [9, 10]];
+
+  /**
+    使用flat
+  */
+  const res = arr.flat(Infinity);
+  console.time('res')
+  console.log('res', res);
+  console.timeEnd('res');
+
+  /**
+   * 使用reduce
+   */
+
+  const flatten = (arr) => {
+    return arr.reduce((pre, cur) => {
+      return pre.concat(Array.isArray(cur) ? flatten(cur) : cur)
+    }, [])
+  };
+  console.time('res1');
+  console.log('res1', flatten(arr));
+  console.timeEnd('res1');
+
+  /**
+   * 使用递归
+   */
+
+  const res2 = [];
+  const fn = arr => {
+    for (let i = 0 ; i < arr.length; i++) {
+      if(Array.isArray(arr[i])) {
+        fn(arr[i]);
+      } else {
+        res2.push(arr[i]);
+      }
+    }
+  };
+  fn(arr);
+  console.time('res2');
+  console.log('res2', res2);
+  console.timeEnd('res2');
+
+  /**
+   * 使用generator 迭代
+   *
+   */
+  function* fn1(arr) {
+    for (let i=0; i<arr.length; i++) {
+      const item = arr[i];
+      if (Array.isArray(item)) {
+        yield* fn1(item);
+      } else {
+        yield item;
+      }
+    }
+  }
+
+  console.time('res3');
+  console.log('res3', Array.from(fn1(arr)));
+  console.timeEnd('res3');
+
+
+</script>

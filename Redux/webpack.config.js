@@ -1,5 +1,6 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const resolve = dir => path.join(__dirname, dir);
@@ -18,7 +19,7 @@ const config = {
   output: {
     filename: 'bundle.js',
     path: resolve('dist'),
-    publicPath: '/'
+    publicPath: ''
   },
   module: {
     rules: [
@@ -34,10 +35,11 @@ const config = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      filename: 'output.html',
+      filename: 'index.html',
       template: './index.html',
       title: 'redux-learn'
-    })
+    }),
+    new WriteFilePlugin()
   ],
   devtool: 'inline-source-map',
   devServer: {
