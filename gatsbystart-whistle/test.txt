@@ -1,0 +1,20 @@
+# t环境
+www.zno.com.t/socket.io/ localhost:8001/socket.io/
+^www.zno.com.t:*/socket.io/***  http://localhost:$1/socket.io/$2
+www.zno.com.t/__webpack_hmr localhost:8001/__webpack_hmr
+www.zno.com.t/___services localhost:8001/___services
+www.zno.com.t/page-data/ localhost:8001/page-data/
+^www.zno.com.t/*.*.hot-update.*$  http://localhost:8001/$1.$2.hot-update.$3
+http://www.zno.com.t/index.html https://www.zno.com.t/index.html
+^www.zno.com.t/$ /Users/heyungao/Documents/dev/zno-v4/.cache/develop-html/index.html
+^www.zno.com.t/*.html /Users/heyungao/Documents/dev/zno-v4/.cache/develop-html/index.html
+*/sign-out.html $1/sign-out.html
+/www.zno.com.t/([^.]+).(js|css|json)(.map)*$/ /Users/heyungao/Documents/dev/zno-v4/dist/$1.$2$3
+
+# d环境
+www.zno.com.d/socket.io/ localhost:8001/socket.io/
+http://www.zno.com.d/index.html https://www.zno.com.t/index.html
+^www.zno.com.d/$ /Users/heyungao/Documents/dev/zno-v4/public/assets/index.html
+^www.zno.com.d/*.html /Users/heyungao/Documents/dev/zno-v4/public/assets/index.html
+*/sign-out.html $1/sign-out.html
+/www.zno.com.d/([^.]+).(js|css|json)(.map)*$/ /Users/heyungao/Documents/dev/zno-v4/public/assets/$1.$2$3
