@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>凸烫金效果</title>
+    <style>
+
+      #list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 0 5px;
+        box-sizing: border-box;
+      }
+      #list li {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      #list li.selected {
+        border-color: #f00;
+      }
+      #list img {
+        width: 80px;
+      }
+      .content {
+        padding: 0 50px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .content > div {
+        position: relative;
+      }
+      .content span {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 80px;
+        height: 30px;
+        line-height: 30px;
+        color: blue;
+        text-align: center;
+        font-size: 14px;
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      选择图片：
+      <ul id="list"></ul>
+    </p>
+    <div class="content">
+      <div><canvas id="c1"></canvas><span>原图</span></div>
+      <div><canvas id="c2"></canvas><span>凸出图</span></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+      const ctx1 = c1.getContext("2d");
+      const ctx2 = c2.getContext("2d");
+
+      initImages();
+
+      $('#list').on('click', 'li', function() {
+        $(this).siblings().removeClass('selected');
+        $(this).addClass('selected');
+        const img = $(this).find('img').get(0);
+        const width = window.innerWidth / 2.08;
+        const ratio = img.width / img.height;
+        const height = Math.round(width / ratio);
+        c1.width = c2.width = width;
+        c1.height = c2.height = height;
+
+        ctx1.drawImage(img, 0, 0, width, height);
+        const imageData = ctx1.getImageData(0, 0, width, height);
+        const CmImageData = ctx2.createImageData(imageData);
+        convolutionMatrix(
+          CmImageData,
+          imageData,
+          [-2, -1, 0, -1, 1, 1, 0, 1, 2],
+          // [-1, -1, -1, -1, 8, -1, -1, -1, -1],
+          // [1, 0, -1, 0, 0, 0, -1, 0, 1],
+          // [0, 0, 0, 3, 1, -3, 0, 0, 0],
+          // [0, 0, 8, 0, 0, 0, -8, 0, 0],
+          0
+        );
+        const reliefImageData = relief(ctx1.createImageData(imageData), imageData);
+        let newImageData = compose(imageData, CmImageData, 'softLight');
+        ctx2.putImageData(newImageData, 0, 0);
+        ctx2.shadowOffsetX = 1;
+        ctx2.shadowOffsetY = 1;
+        ctx2.shadowColor = '#555';
+        ctx2.shadowBlu
+        r = 1;
+        ctx2.drawImage(c2, 2, 2, width, height);
+      });
+
+      function initImages() {
+        const html = [];
+        for (let i=0; i<=15; i++) {
+          const src = `images/${i}.png`;
+          html.push(`
+            <li>
+              <img src=${src} />
+            </li>
+          `);
+        }
+        list.innerHTML = html.join('');
+      }
+
+      function relief(newImageData, imageData) {
+        const { width, height, data } = imageData;
+        const pixels = data.length;
+        for (let j = 0; j < height; j++) {
+          for (let i = 0; i < width; i++) {
+            const index = (j * width + i) * 4;
+            let nextIndex = index + 4;
+            if (nextIndex > pixels) {
+              nextIndex = pixels - 4;
+            }
+            const r = Math.abs(data[index] - data[nextIndex] + 128);
+            const g = Math.abs(data[index + 1] - data[nextIndex + 1] + 128);
+            const b = Math.abs(data[index + 2] - data[nextIndex + 2] + 128);
+            const val = parseInt(0.3 * r + 0.59 * g + 0.11 * b);
+            newImageData.data[index] = val;
+            newImageData.data[index + 1] = val;
+            newImageData.data[index + 2] = val;
+            newImageData.data[index + 3] = data[index + 3];
+          }
+        }
+        return newImageData;
+      }
+
+      const processor = {
+        normal: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = sourceR * sourceA + targetR * (1 - sourceA);
+          const g = sourceG * sourceA + targetG * (1 - sourceA);
+          const b = sourceB * sourceA + targetB * (1 - sourceA);
+          const a = sourceA * sourceA + targetA * (1 - sourceA);
+
+          return [r, g, b, a];
+        },
+        multiply: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+          return [
+            (sourceR * targetR) / 255,
+            (sourceG * targetG) / 255,
+            (sourceB * targetB) / 255,
+            (sourceA * targetA) / 255,
+          ];
+        },
+        darker: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const totalTarget = targetR + targetG + targetB + targetA;
+          const totalSource = sourceR + sourceG + sourceB + sourceA;
+
+          if (totalTarget < totalSource) {
+            return target;
+          }
+
+          return source;
+        },
+        hardLight: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r =
+            sourceR > 128
+              ? 255 - ((255 - sourceR) * (255 - targetR)) / 128
+              : (sourceR * targetR) / 128;
+          const g =
+            sourceG > 128
+              ? 255 - ((255 - sourceG) * (255 - targetG)) / 128
+              : (sourceG * targetG) / 128;
+          const b =
+            sourceB > 128
+              ? 255 - ((255 - sourceB) * (255 - targetB)) / 128
+              : (sourceB * targetB) / 128;
+          const a =
+            sourceA > 128
+              ? 255 - ((255 - sourceA) * (255 - targetA)) / 128
+              : (sourceA * targetA) / 128;
+
+          return [r, g, b, a];
+        },
+        vividLight: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r =
+            sourceR <= 128
+              ? 255 - ((255 - targetR) / (2 * sourceR)) * 255
+              : (targetR / (2 * (255 - sourceR))) * 255;
+          const g =
+            sourceG <= 128
+              ? 255 - ((255 - targetG) / (2 * sourceG)) * 255
+              : (targetG / (2 * (255 - sourceG))) * 255;
+          const b =
+            sourceB <= 128
+              ? 255 - ((255 - targetB) / (2 * sourceB)) * 255
+              : (targetB / (2 * (255 - sourceB))) * 255;
+          const a =
+            sourceA <= 128
+              ? 255 - ((255 - targetA) / (2 * sourceA)) * 255
+              : (targetA / (2 * (255 - sourceA))) * 255;
+
+          return [r, g, b, a];
+        },
+        hardMix: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = targetR + sourceR < 255 ? 0 : 255;
+          const g = targetG + sourceG < 255 ? 0 : 255;
+          const b = targetB + sourceB < 255 ? 0 : 255;
+          const a = targetA + sourceA < 255 ? 0 : 255;
+
+          return [r, g, b, a];
+        },
+        colorBurn: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = (Math.max(0, targetR + sourceR - 255) * 255) / sourceR;
+          const g = (Math.max(0, targetG + sourceG - 255) * 255) / sourceG;
+          const b = (Math.max(0, targetB + sourceB - 255) * 255) / sourceB;
+          const a = (Math.max(0, targetA + sourceA - 255) * 255) / sourceA;
+
+          return [r, g, b, a];
+        },
+        lighten: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = Math.max(targetR, sourceR);
+          const g = Math.max(targetG, sourceG);
+          const b = Math.max(targetB, sourceB);
+          const a = Math.max(targetA, sourceA);
+
+          return [r, g, b, a];
+        },
+        screen: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = 255 - (255 - sourceR) * (255 - targetR) / 255;
+          const g = 255 - (255 - sourceG) * (255 - targetG) / 255;
+          const b = 255 - (255 - sourceB) * (255 - targetB) / 255;
+          const a = 255 - (255 - sourceA) * (255 - targetA) / 255;
+
+          return [r, g, b, a];
+        },
+        colorDodge: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = targetR + sourceR * targetR / (255 - sourceR);
+          const g = targetG + sourceG * targetG / (255 - sourceG);
+          const b = targetB + sourceB * targetB / (255 - sourceB);
+          const a = targetA + sourceA * targetA / (255 - sourceA);
+
+          return [r, g, b, a];
+        },
+        linearDodge: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = Math.min(targetR + sourceR, 255);
+          const g = Math.min(targetG + sourceG, 255);
+          const b = Math.min(targetB + sourceB, 255);
+          const a = Math.min(targetA + sourceA, 255);
+
+          return [r, g, b, a];
+        },
+        overlay: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = 255 - (255 - sourceR) * (255 - targetR) / 128;
+          const g = 255 - (255 - sourceG) * (255 - targetG) / 128;
+          const b = 255 - (255 - sourceB) * (255 - targetB) / 128;
+          const a = 255 - (255 - sourceA) * (255 - targetA) / 128;
+
+          return [r, g, b, a];
+        },
+        softLight: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = targetR + (2 * sourceR - 255) * (Math.sqrt(targetR / 255) * 255 - targetR) / 255;
+          const g = targetG + (2 * sourceG - 255) * (Math.sqrt(targetG / 255) * 255 - targetG) / 255;
+          const b = targetB + (2 * sourceB - 255) * (Math.sqrt(targetB / 255) * 255 - targetB) / 255;
+          const a = targetA + (2 * sourceA - 255) * (Math.sqrt(targetA / 255) * 255 - targetA) / 255;
+
+          return [r, g, b, a];
+        },
+        linearLight: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = Math.min(2 * sourceR + targetR - 255, 255);
+          const g = Math.min(2 * sourceG + targetG - 255, 255);
+          const b = Math.min(2 * sourceB + targetB - 255, 255);
+          const a = Math.min(2 * sourceA + targetA - 255, 255);
+
+          return [r, g, b, a];
+        },
+        difference: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = Math.abs(sourceR - targetR);
+          const g = Math.abs(sourceG - targetG);
+          const b = Math.abs(sourceB - targetB);
+          const a = Math.abs(sourceA - targetA);
+
+          return [r, g, b, a];
+        },
+        exclusion: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = (sourceR + targetR) - sourceR * targetR / 128;
+          const g = (sourceG + targetG) - sourceG * targetG / 128;
+          const b = (sourceB + targetB) - sourceB * targetB / 128;
+          const a = (sourceA + targetA) - sourceA * targetA / 128;
+
+          return [r, g, b, a];
+        },
+        subtract: function (target, source) {
+          const [targetR, targetG, targetB, targetA] = target;
+          const [sourceR, sourceG, sourceB, sourceA] = source;
+
+          const r = Math.max(0, targetR - sourceR);
+          const g = Math.max(0, targetG - sourceG);
+          const b = Math.max(0, targetB - sourceB);
+          const a = Math.max(0, targetA - sourceA);
+
+          return [r, g, b, a];
+        },
+      };
+
+      function compose(target, source, type) {
+        const imgData = document
+          .createElement("canvas")
+          .getContext("2d")
+          .createImageData(target);
+        for (let i = 0; i < target.data.length; i += 4) {
+          if (source[i + 3] === 0) {
+            return;
+          }
+          const [r, g, b, a] = processor[type](
+            [
+              target.data[i],
+              target.data[i + 1],
+              target.data[i + 2],
+              target.data[i + 3],
+            ],
+            [
+              source.data[i],
+              source.data[i + 1],
+              source.data[i + 2],
+              source.data[i + 3],
+            ]
+          );
+          imgData.data[i] = r;
+          imgData.data[i + 1] = g;
+          imgData.data[i + 2] = b;
+          imgData.data[i + 3] = a;
+        }
+        return imgData;
+      }
+
+      function loadImg(src, callback) {
+        const img = new Image();
+        img.onload = () => {
+          callback && callback(img);
+        };
+        img.src = src;
+      }
+
+      function convolutionMatrix(output, input, kernel, offset = 0) {
+        let iD = input.data,
+          oD = output.data;
+        const { width: w, height: h } = input;
+        for (let y = 1; y < h - 1; y += 1) {
+          for (let x = 1; x < w - 1; x += 1) {
+            for (let c = 0; c < 3; c += 1) {
+              let i = (y * w + x) * 4 + c;
+              oD[i] =
+                offset +
+                (kernel[0] * iD[i - w * 4 - 4] +
+                  kernel[1] * iD[i - w * 4] +
+                  kernel[2] * iD[i - w * 4 + 4] +
+                  kernel[3] * iD[i - 4] +
+                  kernel[4] * iD[i] +
+                  kernel[5] * iD[i + 4] +
+                  kernel[6] * iD[i + w * 4 - 4] +
+                  kernel[7] * iD[i + w * 4] +
+                  kernel[8] * iD[i + w * 4 + 4]) /
+                  1;
+            }
+            oD[(y * w + x) * 4 + 3] = 255;
+          }
+        }
+        return output;
+      }
+    </script>
+  </body>
+</html>

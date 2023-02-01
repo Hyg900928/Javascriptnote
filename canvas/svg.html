@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG烫金镂空测试demo</title>
+    <script src="svg.min.js"></script>
+    <style>
+        .preview {
+            display:  inline-block;
+        }
+        .preview img {
+            width:  500px;
+        }
+        .gold {
+            background:  url(./images/GOLD.a2e9fda4.gif) center center no-repeat;
+            background-size:  98% 98%;
+        }
+        .red {
+            background:  url(./images/DEEP_RED.309af30b.gif) center center no-repeat;
+            background-size:  98% 98%;
+        }
+        .silver {
+            background:  url(./images/SILVER.7b045994.gif) center center no-repeat;
+            background-size:  98% 98%;
+        }
+        div {
+            margin: 10px auto;
+        }
+    </style>
+    <div>
+        有无烫金：
+        <select name="foil" id="foil">
+            <option value="0">无烫金</option>
+            <option value="1">有烫金</option>
+        </select>
+    </div>
+    <div id="fc" style="display: none;">
+        烫金颜色：
+        <select name="foilColor" id="foilColor">
+            <option value="gold">金色</option>
+            <option value="red">红色</option>
+            <option value="silver">银色</option>
+        </select>
+    </div>
+    <div>
+        预览区：
+        <div class="preview" id="preview">
+            <img src="" id="img" alt="">
+        </div>
+    </div>
+</head>
+<body>
+<script>
+    function getFoilPreviewImg(src) {
+        return new Promise((resolve, reject) => {
+            loadImg(src).then(img => {
+                const id = 'foil-preview-img';
+                document.body.appendChild(img);
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                SVGInject.setOptions({
+                    useCache: false,
+                    copyAttributes: false,
+                    afterLoad: svg => {
+                        Array.from(svg.children).map(d => {
+                            // 这个规则根据实际情况来
+                            if (d.id && d.id !== 'CG') {
+                                d.remove();
+                            }
+                        });
+                    },
+                    beforeInject: (img, svg) => {
+                        svg.id = id;
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        console.log('svg==>', svg)
+                        console.log('img==>', img)
+                        const newXml = new XMLSerializer().serializeToString(svg);
+                        console.log('newXml===>', newXml)
+                        const svgBase64 = btoa(unescape(encodeURIComponent(newXml)));
+                        console.log('svgBase64==>', svgBase64)
+                        ctx.drawImage(img, 0, 0);
+                        ctx.globalCompositeOperation = 'destination-out';
+                        const newSrc = `data:image/svg+xml;base64,${svgBase64}`;
+                        console.log('newSrc==>', newSrc)
+                        loadImg(newSrc).then(img => {
+                            ctx.drawImage(img, 0, 0);
+                            toObjectUrl(canvas).then(resolve).catch(reject);
+                        });
+                    },
+                    onFail: reject,
+                    afterInject: svg => {
+                        document.getElementById(id).remove();
+                    }
+                });
+                SVGInject(img);
+            }).catch(reject);
+        });
+    }
+
+    function toObjectUrl(canvas) {
+        return new Promise((resolve, reject) => {
+            if (!canvas) {
+                reject();
+            } else {
+                // chrome等现代浏览器
+                if (canvas.toBlob) {
+                    canvas.toBlob(blob => {
+                        if(blob) {
+                            resolve(URL.createObjectURL(blob));
+                        }
+                    });
+                } else if (canvas.msToBlob) {
+                    // IE.
+                    const blob = canvas.msToBlob();
+                    if(blob) {
+                        resolve(URL.createObjectURL(blob));
+                    }
+                } else {
+                    const data = canvas.toDataURL();
+                    resolve(data);
+                }
+            }
+        });
+    };
+
+    function loadImg(src) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            // img.style.display = 'none';
+            // document.body.appendChild(img);
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
+        });
+    }
+
+    function setNoFoilImg() {
+        img.src = './images/test.svg';
+    }
+
+    function lazySetFoilImg() {
+        let src = '';
+        return () => {
+            preview.className = `preview ${foilColor.value}`;
+            if (!src) {
+                getFoilPreviewImg('./images/test.svg').then(url => {
+                    console.log('ur===>', url)
+                    src = url;
+                    img.src = src;
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
+            img.src = src;
+        }
+    }
+
+    const setFoilImg = lazySetFoilImg();
+
+    setNoFoilImg();
+
+    foil.onchange = (e) => {
+        const val = parseInt(e.target.value);
+        if (val) {
+            fc.style.display = 'block';
+            setFoilImg();
+        } else {
+            fc.style.display = 'none';
+            setNoFoilImg();
+        }
+    }
+
+    foilColor.onchange = setFoilImg;
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box {
+            width: 500px;
+            height:80px;
+            vertical-align: middle;;
+            background: blue;
+            color: white;
+            direction: rtl;
+        }
+    </style>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    async function fn() {
+        try {
+            const res = await new Promise((resolve, reject) => {
+                reject('failure');
+            })
+        }catch (e) {
+            console.log('e===>', e)
+        }
+
+
+    }
+
+    fn()
+
+</script>
