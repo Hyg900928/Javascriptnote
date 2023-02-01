@@ -6,3 +6,5 @@ lodash/node_modules
 konva/node_modules
 konva/package-lock.json
 konva/yarn.lock
+node/node_modules
+test/node_modules
