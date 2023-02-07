@@ -8,3 +8,8 @@ konva/package-lock.json
 konva/yarn.lock
 node/node_modules
 test/node_modules
+
+
+**/node_modules
+
+**/cmake-build-*
