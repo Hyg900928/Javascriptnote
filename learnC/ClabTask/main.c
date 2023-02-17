@@ -1,14 +1,18 @@
 #include <stdio.h>
-
-#define MAX 3
+#include <stdlib.h>
 
 // 矩阵相乘
 // 求 m*k 型矩阵 A 左乘 k*n 型矩阵 B 后的 m*n 型矩阵 C
+
+// 定义新类型
 struct Matrixs {
-  int elements[MAX][MAX];
+  int elements[100][100];
   int row;
   int col;
 };
+
+// 矩阵枚举
+enum matrixs {arr1 = 1, arr2, arr3, arr4};
 
 // 声明数组
 int a1[] = {
@@ -33,8 +37,19 @@ int a4[] = {
     8, 10
 };
 
-
+/**
+ * 两个矩阵相乘
+ * @param matrixA
+ * @param matrixB
+ * @param matrixC
+ */
 void matrix_multi_pointer(struct Matrixs *matrixA, struct Matrixs *matrixB, struct Matrixs *matrixC) {
+
+  // 两个矩阵相乘，必须满足矩阵A的列数等于矩阵B的行数
+  if(matrixA->col != matrixB->row ) {
+    printf("所选的矩阵无法相乘");
+    exit(EXIT_FAILURE);
+  }
   int m, k, n;
   for (m = 0; m < matrixA->row; ++m)
     for (n = 0; n < matrixB->col; ++n)
@@ -44,13 +59,52 @@ void matrix_multi_pointer(struct Matrixs *matrixA, struct Matrixs *matrixB, stru
       }
 }
 
-void initialMatrix(int row, int col, struct Matrixs *matrixsD, int arr[]) {
+/**
+ * 根据所选编号，初始化结构变量
+ * @param num
+ * @param matrixsD
+ */
+void initialMatrix(enum matrixs num, struct Matrixs *matrixsD) {
+  int row, col;
 
+  // 一个指向整数的指针
+  int *ptr;
+  switch (num) {
+    case arr1:
+      printf("选中的是a1\n");
+      row = 3;
+      col = 3;
+      ptr = a1;
+      break;
+    case arr2:
+      printf("选中的是a2\n");
+      row = 3;
+      col = 3;
+      ptr = a2;
+      break;
+    case arr3:
+      printf("选中的是a3\n");
+      row = 2;
+      col = 3;
+      ptr = a3;
+      break;
+    case arr4:
+      printf("选中的是a4\n");
+      row = 3;
+      col = 2;
+      ptr = a4;
+      break;
+    default:
+      printf("超出选择范围\n");
+      break;
+  }
   matrixsD->row = row;
   matrixsD->col = col;
+
+  // 根据行数和列数，将一维数组转为多维数组
   for (int i = 0; i < row; i++)
     for(int j = 0; j < col; j++) {
-      matrixsD->elements[i][j] = arr[i * col + j];
+      matrixsD->elements[i][j] = ptr[i * col + j];
     }
 
 }
@@ -58,58 +112,27 @@ void initialMatrix(int row, int col, struct Matrixs *matrixsD, int arr[]) {
 
 
 int main() {
-  int m, n, a, b;
-  enum matrixs {arr1 = 1, arr2, arr3, arr4};
-  int *selected_array;
   enum  matrixs num1;
   enum  matrixs num2;
 
-  // 生明三个结构指针变量
+  // 声明三个结构变量
   struct Matrixs matrixs1;
   struct Matrixs matrixs2;
   struct Matrixs matrixs3;
-  struct Matrixs matrixs4;
 
-  printf("请输入两个个矩阵标号: (1. a1, 2. a2, 3. a3, 4. a4): ");
+  int *slected_ptr1;
+  int *slected_ptr2;
+
+  printf("请输入两个矩阵标号: (1. a1, 2. a2, 3. a3, 4. a4): ");
   scanf("%u %u", &num1, &num2);
-//  if(num1 == 1) {
-//    selected_array = a1;
-//  }
-
-  printf("num1=%d num2=%d\n", num1, num2);
-//  // 数组a1的行数
-//  m = sizeof(a1) / sizeof(a1[0]);
-//
-//  // 数组a1的列数
-//  n = sizeof(a1[0]) / sizeof(a1[0][0]);
-//
-//  // 数组a2的行数
-//  a = sizeof(a2) / sizeof(a2[0]);
-//
-//  // 数组a2的列数
-//  b = sizeof(a2[0]) / sizeof(a2[0][0]);
-
-//  printf("a1行数为： %d\n", m);
-//  printf("a1列数为： %d\n", n);
 
 
-  // 初始化结构变量
-  initialMatrix(3, 3, &matrixs1, a1);
-  initialMatrix(3, 3, &matrixs2, a2);
-  initialMatrix(2, 3, &matrixs3, a3);
-  initialMatrix(3, 2, &matrixs4, a4);
+  // 根据所选编号初始化结构变量
+  initialMatrix(num1, &matrixs1);
 
-  printf("matrixs1.row：%d\n", matrixs1.row);
-  printf("matrixs1.col：%d\n", matrixs1.col);
-  for(int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++) {
-      printf("matrixs1[elements][%d][%d]: %d\n", i, j, matrixs1.elements[i][j]);
-    }
+  initialMatrix(num2, &matrixs2);
 
-  for(int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++) {
-      printf("matrixs2[elements][%d][%d]: %d\n", i, j, matrixs2.elements[i][j]);
-    }
+  //矩阵相乘
   matrix_multi_pointer(&matrixs1, &matrixs2, &matrixs3);
 
   printf("\n矩阵a1左乘矩阵a2为：\n\n");
