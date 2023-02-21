@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "matrix.h"
 
 // 矩阵相乘
@@ -49,32 +50,28 @@ void initialMatrix(enum matrixs num, struct Matrixs *matrixsD) {
   float *ptr;
   switch (num) {
     case arr1:
-      printf("选中的是a1\n");
       row = 3;
       col = 3;
       ptr = a1;
       break;
     case arr2:
-      printf("选中的是a2\n");
       row = 3;
       col = 3;
       ptr = a2;
       break;
     case arr3:
-      printf("选中的是a3\n");
       row = 2;
       col = 3;
       ptr = a3;
       break;
     case arr4:
-      printf("选中的是a4\n");
       row = 3;
       col = 2;
       ptr = a4;
       break;
     default:
-      printf("超出选择范围\n");
-      break;
+      printf("initialMatrix：所选编号不存在, 请重试\n");
+      exit(EXIT_FAILURE);
   }
   matrixsD->row = row;
   matrixsD->col = col;
@@ -107,8 +104,8 @@ float * initialArray(int *row, int *col, enum matrixs num){
       *col = 2;
       return a3;
     default:
-      printf("超出选择范围\n");
-      return NULL;
+      printf("initialArray： 所选编号不存在, 请重试\n");
+      exit(EXIT_FAILURE);
   }
 }
 
@@ -117,6 +114,34 @@ void tranformArrayToMatrixs(const float *ptr, const int *row, const int *col, fl
     for (int j = 0; j < *col; ++j) {
       arr[i][j] = *(ptr + i * (*col) + j);
     }
+}
+
+void writeMatrixPointerResultToFile(FILE *fp, struct Matrixs matrixs1, struct Matrixs matrixs2, struct Matrixs matrixs3) {
+  fprintf(fp, "\n矩阵方法得到的结果：矩阵a1左乘矩阵a2为：\n\n");
+  for (int i = 0; i< matrixs1.row; ++i)
+  {
+    fprintf(fp, "  |");
+    for (int j = 0; j < matrixs2.col; ++j)
+    {
+      fprintf(fp, " %-6f",matrixs3.elements[i][j]);
+    }
+    fprintf(fp, "|\n");
+  }
+  fprintf(fp, "\n");
+}
+
+void writeMatrixArrayResultToFile(FILE *fp, int row1, int col2, float arr[][3]) {
+  fprintf(fp, "\n数组方法得到的结果：矩阵a1左乘矩阵a2为：\n\n");
+  for (int i = 0; i< row1; ++i)
+  {
+    fprintf(fp, "  |");
+    for (int j = 0; j < col2; ++j)
+    {
+      fprintf(fp, " %-6f", arr[i][j]);
+    }
+    fprintf(fp, "|\n");
+  }
+  fprintf(fp, "\n");
 }
 
 
@@ -161,29 +186,27 @@ int main() {
 
   matrix_multi_array(row1, col1, row2, col2, arr1, arr2, arr3);
 
-  printf("\n矩阵方法得到的结果：矩阵a1左乘矩阵a2为：\n\n");
-  for (int i = 0; i< matrixs1.row; ++i)
-  {
-    printf("  |");
-    for (int j = 0; j < matrixs2.col; ++j)
-    {
-      printf(" %-6f",matrixs3.elements[i][j]);
-    }
-    printf("\b\b|\n");
+  // 打开文件，并将结果矩阵写入文件
+  FILE *fp = fopen("/Volumes/heyg/dev/Javascriptnote/learnC/ClabTask/result.txt", "w");
+  if (fp == NULL) {
+    fprintf(stderr, "Failed to open file.\n");
+    exit(EXIT_FAILURE);
   }
-  printf("\n");
+  // 结构体方法结果写入文件
+  writeMatrixPointerResultToFile(fp, matrixs1, matrixs2, matrixs3);
 
-  printf("\n数组方法得到的结果：矩阵a1左乘矩阵a2为：\n\n");
-  for (int i = 0; i< row1; ++i)
-  {
-    printf("  |");
-    for (int j = 0; j < col2; ++j)
-    {
-      printf(" %-6f", arr3[i][j]);
-    }
-    printf("\b\b|\n");
-  }
-  printf("\n");
+  // 数组方法结果写入文件
+  writeMatrixArrayResultToFile(fp, row1, col2, arr3);
+
+  // 写入时间戳
+  time_t now = time(NULL);
+  struct tm *tm_now = localtime(&now);
+  char timestamp[20];
+  strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", tm_now);
+  fprintf(fp, "%s\n", timestamp);
+
+  // 关闭文件
+  fclose(fp);
 
   return 0;
 }

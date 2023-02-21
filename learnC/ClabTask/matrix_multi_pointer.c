@@ -12,7 +12,7 @@
 void matrix_multi_pointer(struct Matrixs *matrixA, struct Matrixs *matrixB, struct Matrixs *matrixC) {
   // 两个矩阵相乘，必须满足矩阵A的列数等于矩阵B的行数
   if(matrixA->col != matrixB->row ) {
-    printf("所选的矩阵不满足相乘条件，无法相乘");
+    printf("matrix_multi_pointer：所选的矩阵不满足相乘条件，无法相乘\n");
     exit(EXIT_FAILURE);
   }
   int m, k, n;

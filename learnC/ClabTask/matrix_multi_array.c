@@ -8,7 +8,7 @@ void matrix_multi_array(int row1, int col1, int row2, int col2, float arr1[][MAX
   int m, k, n;
 
   if(col1 != row2) {
-    printf("所选的矩阵无法相乘");
+    printf("matrix_multi_array：所选的矩阵无法相乘\n");
     exit(EXIT_FAILURE);
   }
   for (m = 0; m < row1; ++m)
