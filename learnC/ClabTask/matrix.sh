@@ -11,5 +11,5 @@ gcc main.c -L. -lmatrix -o matrix_multi
 LD_LIBRARY_PATH=. ./matrix_multi
 
 # Clean up
-eco "清除动态链接库和可执行文件"
-rm libmatrix.so matrix_multi
+#echo "清除动态链接库和可执行文件"
+#rm libmatrix.so matrix_multi
