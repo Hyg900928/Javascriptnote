@@ -187,7 +187,7 @@ int main() {
   matrix_multi_array(row1, col1, row2, col2, arr1, arr2, arr3);
 
   // 打开文件，并将结果矩阵写入文件
-  FILE *fp = fopen("/Volumes/heyg/dev/Javascriptnote/learnC/ClabTask/result.txt", "w");
+  FILE *fp = fopen("/tmp/result.txt", "w");
   if (fp == NULL) {
     fprintf(stderr, "Failed to open file.\n");
     exit(EXIT_FAILURE);
