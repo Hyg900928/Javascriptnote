@@ -13,7 +13,7 @@ file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
 
 foreach(file ${files})
     get_filename_component(name ${file} NAME)
-    add_executable(${name} ${file})
+    add_executable(${name} ${file} matrix.h)
 
 
 endforeach()
