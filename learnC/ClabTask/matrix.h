@@ -9,19 +9,31 @@
 
 // 定义新类型
 struct Matrixs {
-  int elements[100][100];
+  float elements[100][100];
   int row;
   int col;
 };
 
 
 /**
- * 两个矩阵相乘
+ * 两个矩阵相乘 结构体 + 指针方式
  * @param matrixA
  * @param matrixB
  * @param matrixC
  */
 void matrix_multi_pointer(struct Matrixs *matrixA, struct Matrixs *matrixB, struct Matrixs *matrixC);
+
+/**
+ * 矩阵相乘 数组实现方式
+ * @param row1
+ * @param col1
+ * @param row2
+ * @param col2
+ * @param arr1
+ * @param arr2
+ * @param arr3
+ */
+void matrix_multi_array(int row1, int col1, int row2, int col2, float arr1[][MAX], float arr2[][MAX], float arr3[][MAX]);
 
 
 #endif //PROJECTID__MATRIX_H_
