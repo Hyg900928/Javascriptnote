@@ -33,7 +33,7 @@ void matrix_multi_pointer(struct Matrixs *matrixA, struct Matrixs *matrixB, stru
  * @param arr2
  * @param arr3
  */
-void matrix_multi_array(int row1, int col1, int row2, int col2, float arr1[][MAX], float arr2[][MAX], float arr3[][MAX]);
+float **matrix_multi_array(int row1, int col1, int row2, int col2, float **arr1, float **arr2);
 
 
 #endif //PROJECTID__MATRIX_H_
