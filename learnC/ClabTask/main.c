@@ -131,30 +131,7 @@ void writeMatrixArrayResultToFile(FILE *fp, int row1, int col2, float **arr) {
   fprintf(fp, "\n");
 }
 
-/**
- * 将一维数组转换位二维数组
- * @param arr 一维数组
- * @param rows 转换的二维数组的行数
- * @param cols 转换的二维数组的列数
- * @return 返回新的二维数组
- */
-float **to_2d_array(float *arr, int rows, int cols) {
-  float **result = malloc(rows * sizeof(float *));
-  for (int i = 0; i < rows; i++) {
-    result[i] = malloc(cols * sizeof(float));
-    for (int j = 0; j < cols; j++) {
-      result[i][j] = arr[i * cols + j];
-    }
-  }
-  return result;
-}
 
-void free_matrix(float **arr, int row) {
-  for (int i = 0; i < row; i++) {
-    free(arr[i]);
-  }
-  free(arr);
-}
 
 int main() {
   enum matrixs num1;
@@ -163,8 +140,7 @@ int main() {
   int row1, col1, row2, col2;
   float *selected_ptr1;
   float *selected_ptr2;
-  float **arr1;
-  float **arr2;
+
   float **arr3;
 
   // 声明三个结构变量
@@ -189,9 +165,7 @@ int main() {
   selected_ptr1 = (float *) initialArray(&row1, &col1, num1);
   selected_ptr2 = (float *) initialArray(&row2, &col2, num2);
 
-  arr1 = to_2d_array(selected_ptr1, row1, col1);
-  arr2 = to_2d_array(selected_ptr2, row2, col2);
-  arr3 = matrix_multi_array(row1, col1, row2, col2, arr1, arr2);
+  arr3 = matrix_multi_array(selected_ptr1, row1, col1, selected_ptr2, row2, col2);
 
   // 打开文件，并将结果矩阵写入文件
   FILE *fp = fopen("/tmp/result.txt", "w");
@@ -216,8 +190,6 @@ int main() {
   fclose(fp);
 
   // 释放内存
-  free_matrix(arr1, row1);
-  free_matrix(arr2, row2);
   free_matrix(arr3, row1);
 
   return 0;

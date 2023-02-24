@@ -23,17 +23,21 @@ struct Matrixs {
  */
 void matrix_multi_pointer(struct Matrixs *matrixA, struct Matrixs *matrixB, struct Matrixs *matrixC);
 
-/**
- * 矩阵相乘 数组实现方式
- * @param row1
- * @param col1
- * @param row2
- * @param col2
- * @param arr1
- * @param arr2
- * @param arr3
- */
-float **matrix_multi_array(int row1, int col1, int row2, int col2, float **arr1, float **arr2);
+ /**
+  * 矩阵相乘 数组实现方式
+  * @param a1 选中的第一个数组
+  * @param row1 第一个数组的行数
+  * @param col1 第一个数组的列数
+  * @param a2  选中的第二个数组
+  * @param row2 第二个数组的行数
+  * @param col2 第二个数组的列数
+  * @return 返回一个新的二维数组
+  */
+float **matrix_multi_array(float *a1, int row1, int col1, float *a2, int row2, int col2);
+
+
+// 释放内存
+void free_matrix(float **arr, int row);
 
 
 #endif //PROJECTID__MATRIX_H_
