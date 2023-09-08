@@ -7,10 +7,15 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "konva": "^8.1.1",
+    "mobx": "^6.10.0",
+    "mobx-react": "^9.0.0",
+    "mobx-react-lite": "^4.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-konva": "^17.0.2-4",
+    "react-quill": "^2.0.0",
     "react-scripts": "4.0.3",
+    "use-image": "^1.1.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -36,5 +41,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": ".prettierrc.js",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

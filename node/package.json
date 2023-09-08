@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "big-integer": "^1.6.51",
     "compressing": "^1.6.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "rimraf": "^3.0.2"
   }
 }

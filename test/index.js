@@ -2126,12 +2126,13 @@ pages.forEach(page => {
     const filterEncimgIds = Array.from(new Set([...encImgIds]));
     arr = arr.concat(filterEncimgIds);
 });
+// console.log('arr===>', arr)
 const newArr = arr.filter(encImgId => {
     const imgItem = images.find(e => e.encImgId === encImgId);
 
     return !imgItem;
 });
-
+// const newArr = ['iLe1w0ZcrxWowdkVWocLnw=='];
 function post(url) {
     return new Promise((resolve, reject) => {
         return nodeFetch(Api(url), {
@@ -2160,7 +2161,7 @@ function post(url) {
 const content = JSON.stringify(newArr);
 // fs.writeJsonSync('./tes3.json', newArr);
 
-post('cloudapi/image/select_image_infos ').then(res => {
+post('cloudapi/image/select_image_infos').then(res => {
     console.log('res===>', res);
     fs.writeJsonSync('./tes.json', res)
 });

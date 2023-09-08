@@ -1,0 +1,9 @@
+.git
+dist
+node_modules
+cfg
+doc
+tools
+resource/tools
+postinstall.js
+dep.js

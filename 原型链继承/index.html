@@ -23,8 +23,9 @@
   SubType.prototype.getSubValue = function() {
     return this.subproperty;
   };
-  var instance = new SubType();
+  const instance = new SubType();
   console.log(instance);
+  console.log('instance-->__proto__', instance.__proto__);
 
   // 确定原型与实例的关系
   // 第一种是使用instanceof 操作符，

@@ -19,5 +19,12 @@ int main() {
   printf("*Pt1 = %d\n", *Pt1 );
   printf("Pt2 = %p\n", Pt2 );
   printf("**Pt2 = %d\n", **Pt2);
+
+  float f,x=3.6,y=5.2;
+  int i=4,a,b;
+  a=x+y;
+  b=(int)(x+y);
+  f=10/i;
+  printf("a=%d,b=%d,f=%f,x=%f\n",a,b,f,x);
   return 0;
 }

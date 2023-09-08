@@ -10,7 +10,7 @@
   <body></body>
 </html>
 <script>
-  /* 
+  /*
         promise 有三个状态
         pending
         fulfilled
@@ -19,10 +19,10 @@
         (2) 当调用resolved(成功), 会由pending => fulfilled
         (3) 当调用rejected(失败) ,会由pendng => rejected
         注意Promise状态, 只能由pengding => fulfilled / rejected, 一旦修改,不能改变
-    
+
      */
   // Promise 对象的方法
-  /* 
+  /*
         then方法,是注册当resolve(成功)/reject(失败)的回调函数
         promise.then(onFulfilled, onRejected)
         then方法返回的也是promise对象, 是异步执行的
@@ -41,12 +41,12 @@
        promise.catch(onRejected)
        相当于
        Promise.then(null, onRejected)
-   
+
        注意
        onRejected不能捕获当前onFulfilled中的异常
-   
+
        promise.then(onFulfilled, onRejected)
-   
+
        可以写成
        promise.then(onFulfilled)
               .catch(onRejected)
@@ -170,20 +170,30 @@
   //     console.log('err', err);
   //   }
   // );
-  let p = Promise.resolve();
+  // let p = Promise.resolve();
+  //
+  // p.then(() => {
+  //   console.log("then1");
+  //   Promise.resolve().then(() => {
+  //     console.log("then1-1");
+  //   });
+  // }).then(() => {
+  //   console.log("then1-2");
+  // });
+  //
+  // p.then(() => {
+  //   console.log("then2");
+  // });
 
-  p.then(() => {
-    console.log("then1");
-    Promise.resolve().then(() => {
-      console.log("then1-1");
-    });
-  }).then(() => {
-    console.log("then1-2");
+  let thenable = {
+    then: function(resolve, reject) {
+      resolve(42);
+    }
+  };
+  let p1 = Promise.resolve(thenable.then);
+  console.log('p1', p1)
+  p1.then(function(value) {
+    console.log(value);  // 42
   });
-
-  p.then(() => {
-    console.log("then2");
-  });
-
 
 </script>

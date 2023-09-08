@@ -14,7 +14,7 @@ const config = {
     extensions: ['.js', '.jsx']
   },
   entry: {
-    index: './index.js'
+    index: './src/index.js'
   },
   output: {
     filename: 'bundle.js',
@@ -36,7 +36,7 @@ const config = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: './index.html',
+      template: './src/index.html',
       title: 'redux-learn'
     }),
     new WriteFilePlugin()

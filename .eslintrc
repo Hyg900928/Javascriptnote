@@ -1,0 +1,58 @@
+{
+  "globals": {
+    "window": "readonly",
+    "t": "readonly",
+    "__isDZ__": "readonly",
+    "__isCN__": "readonly",
+    "__SINGLE_SPA__": "readonly",
+    "__DEVELOPMENT__": "readonly",
+    "__DRAG_DATA": "readonly",
+    "__LANGUAGE__": "readonly",
+    "__app": "readonly",
+    "loadWasm": "readonly",
+    "logEvent": "readonly",
+    "initImagePool": "readonly",
+    "imageDownloader": "readonly",
+    "__allPhotosUrls": "readonly",
+    "gtag": "readonly",
+    "fbq": "readonly"
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "react",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": false
+    }
+  },
+  "rules": {
+    "react/jsx-quotes": 0,
+    "jsx-quotes": [
+      2,
+      "prefer-double"
+    ],
+    "react/require-extension": 0,
+    "no-undef": 2,
+    "no-redeclare": 2,
+    "no-debugger": 2,
+    "no-const-assign": 2,
+    "no-constant-condition": 2,
+    "no-dupe-keys": 2,
+    "no-dupe-args": 2,
+    "no-else-return": 2,
+    "no-empty": 2,
+    "no-func-assign": 2,
+    "new-cap": 0,
+    "comma-dangle": 0
+  }
+}

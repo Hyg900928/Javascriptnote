@@ -1,36 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        #box {
-            width: 500px;
-            height:80px;
-            vertical-align: middle;;
-            background: blue;
-            color: white;
-            direction: rtl;
-        }
-    </style>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 </head>
 <body>
 
 </body>
 </html>
+
+<script src="https://peterolson.github.io/BigInteger.js/BigInteger.min.js"></script>
 <script>
-    async function fn() {
-        try {
-            const res = await new Promise((resolve, reject) => {
-                reject('failure');
-            })
-        }catch (e) {
-            console.log('e===>', e)
-        }
-
-
-    }
-
-    fn()
-
+    var largeNumber = bigInt("75643564363473453456342378564387956906736546456235345").add(2);
+    console.log('largeNumber===>', largeNumber)
 </script>

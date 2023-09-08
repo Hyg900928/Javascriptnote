@@ -1,8 +1,10 @@
-import UseCallback from './hooks/useCallback'
+import React from 'react';
+import ColorPicker from "./components/Pickr";
 function App() {
   return (
     <div className="App">
-      <UseCallback />
+
+        <ColorPicker />
     </div>
   );
 }

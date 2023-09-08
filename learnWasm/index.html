@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <head>
+      <style>
+        #arr1, #arr2 {
+          width: 100px;
+          height: 30px;
+        }
+        .section1, .section2 {
+          margin-bottom: 30px;
+        }
+        button {
+          cursor: pointer;
+        }
+      </style>
+    </head>
+</head>
+<body>
+<div class="section1">
+  <label for="arr1">
+    第一个数组：
+    <select id="arr1">
+      <option value="a1">数组a1</option>
+      <option value="a2">数组a2</option>
+      <option value="a3">数组a3</option>
+      <option value="a4">数组a4</option>
+    </select>
+  </label>
+
+  <label for="arr1">
+    第二个数组：
+    <select id="arr2">
+      <option value="a1">数组a1</option>
+      <option value="a2">数组a2</option>
+      <option value="a3">数组a3</option>
+      <option value="a4">数组a4</option>
+    </select>
+  </label>
+
+</div>
+
+  <div class="section2">
+    <button id="btn1">点击使用数组方式计算</button>
+    <div>
+      <span>计算结果:</span>
+      <p id="result1"></p>
+
+    </div>
+  </div>
+</body>
+</html>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+</script>
+<script type='text/javascript'>
+
+  Module= {};
+  // 声明数组
+  const a1 =  [
+    [2, 3, 4],
+    [5, 6, 7],
+    [8, 9, 10]
+  ];
+  const a2 = [
+    [7, 3, 9],
+    [13, 6, 7],
+    [8, 14, 10],
+  ];
+  const a3 = [
+    [7, 3, 9],
+    [13, 6, 7]
+  ];
+
+  const a4 = [
+    [7, 3],
+    [13, 6],
+    [8, 10]
+  ];
+  const arrMap = {
+    'a1': a1,
+    'a2': a2,
+    'a3': a3,
+    'a4': a4
+  }
+  let selectedArr1 = arrMap[$('#arr1').val()];
+  let selectedArr2 = arrMap[$('#arr2').val()];
+
+  // window.onload = function () {
+    const change = function() {
+      const currentSelec = $(this).attr("id");
+      if(currentSelec === 'arr1') {
+        selectedArr1 = arrMap[$(this).val()];
+      } else if(currentSelec === 'arr2') {
+        selectedArr2 = arrMap[$(this).val()];
+      }
+
+      // console.log('selected1', selectedArr1, 'selected2', selectedArr2)
+    }
+    $("#arr1").change(function() {
+      change.call(this);
+    })
+    $("#arr2").change(function() {
+      change.call(this);
+    })
+
+
+    Module.onRuntimeInitialized = function () {
+
+      $('#btn1').click(function() {
+        try {
+          const r1 = Module.ccall('matrix_multi_array', 'number', ['array', 'number', 'number', 'array', 'number', 'number'], [selectedArr1.flat(), selectedArr1.length, selectedArr1[0].length, selectedArr2.flat(), selectedArr2.length, selectedArr2[0].length]); // 地址
+          const { BYTES_PER_ELEMENT } = Float32Array;
+          console.log('BYTES_PER_ELEMENT===>', BYTES_PER_ELEMENT)
+          const ret = [];
+          for (let i=0; i < selectedArr1.length; i++) {
+            const pointer = _getLineAddress(i);
+            const row = new Float32Array(Module.asm.memory.buffer, pointer, selectedArr1[0].length);
+            ret.push(Array.from(row));
+          }
+          console.log('ret', ret);
+          let html = '';
+          for(let i = 0; i < ret.length; i++) {
+            html+= '<br/>';
+            for(let j = 0; j < ret[0].length; j++) {
+              html += `${ret[i][j]} &nbsp;&nbsp;`;
+            }
+          }
+          $('#result1').html(`<b>${html}</b>`)
+          console.log(html)
+        }catch (e) {
+          console.log('e===>', )
+          $('#result1').html(`计算错误，所选矩阵无法相乘`)
+        }
+
+      })
+      // const typeArray1 = new Uint8Array(a1.flat());
+      // const buf1 = Module._malloc(typeArray1.byteLength);
+      // Module.HEAPU8.set(typeArray1, buf1);
+      //
+      // const typeArray2 = new Uint8Array(a2.flat());
+      // const buf2 = Module._malloc(typeArray2.byteLength);
+      // Module.HEAPU8.set(typeArray2, buf2);
+      //
+      // _matrix_multi_array(buf1, a1.length, a1[0].length, buf2, a2.length, a2[0].length);
+
+
+    }
+
+
+
+
+  // }
+
+
+
+
+</script>
+<script async type="text/javascript" src="matrix.js"></script>

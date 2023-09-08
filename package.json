@@ -1,0 +1,27 @@
+{
+  "name": "Javascriptnote",
+  "version": "1.0.0",
+  "description": "前端随手笔记",
+  "main": ".prettierrc.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hyg900928/Javascriptnote.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hyg900928/Javascriptnote/issues"
+  },
+  "homepage": "https://github.com/Hyg900928/Javascriptnote#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^1.19.1"
+  }
+}
