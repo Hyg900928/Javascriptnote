@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+  const obj = {
+    "SAASCN_PWA_InterfaceDuration": 24,
+    "SAASCN_PWA_PageWhiteScreen": 1,
+    "SAASCN_PWA_networkCost": 1,
+    "SAASCN_PWA_renderCost": 1,
+    "SAASCN_PWA_total": 1,
+    "SAASCN_PWA_activeCost": 1,
+    "SAASCN_PWA_PageView": 1
+  };
+
+  const maxEventName = Object.keys(obj).reduce((max, name) => {
+    return obj[name] > (obj[max] || 0) ? name : max;
+  }, '');
+  console.log('maxEventName', maxEventName)
+
+</script>

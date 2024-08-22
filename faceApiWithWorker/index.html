@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+</body>
+</html>
+<!--<script src="./SmartCrop.js"></script>-->
+<script src="./utils.js"></script>
+<script>
+  // main.js（主线程）
+
+  const myWorker = new Worker('./worker.js'); // 创建worker
+
+  myWorker.addEventListener('message', e => { // 接收消息
+    console.log(e.data); // Greeting from Worker.js，worker线程发送的消息
+  });
+
+  // 这种写法也可以
+  // myWorker.onmessage = e => { // 接收消息
+  //    console.log(e.data);
+  // };
+
+  // myWorker.postMessage('Greeting from Main.js'); // 向 worker 线程发送消息，对应 worker 线程中的 e.data
+  (async () => {
+    // const image = await fetchImage('./test.jpg');
+    // console.log('image===>', image)
+    // const canvas = new OffscreenCanvas(image.width,image.height); //can also be normal canvas
+    // const context = canvas.getContext('2d');
+    // context.drawImage(image,0,0,image.width,image.height);
+    // const imgData = context.getImageData(0,0,image.width,image.height);
+    //
+    // const params = Object.assign({}, {
+    //   actionType: 'INIT_FACEAPI_MODELS',
+    //   w: image.width,
+    //   h: image.height,
+    //   buffer: imgData.data.buffer
+    // });
+    myWorker.postMessage({});
+  })()
+
+</script>

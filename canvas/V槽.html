@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>V 槽demo</title>
+  </head>
+  <body>
+    <canvas width="800" height="800" id="canvas"></canvas>
+    <script>
+
+      // 定义V槽刀的角度
+      const rot = 45;
+      const ctx = canvas.getContext("2d");
+
+      // 元素的尺寸信息
+      const box = {
+        x: 100,
+        y: 200,
+        width: 300,
+        height: 400,
+      };
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(box.x, box.y, box.width, box.height);
+
+
+      function drawGrooveBorderSlice(ctx, slice) {
+        const { points, gradient } = slice;
+        const { startColor, startPoint, stopColor, stopPoint } = gradient;
+
+        // 定义渐变色变量
+        const gra = ctx.createLinearGradient(startPoint.x, startPoint.y, stopPoint.x, stopPoint.y);
+        gra.addColorStop(0, startColor);
+        gra.addColorStop(1, stopColor);
+        ctx.beginPath();
+
+        // 使用渐变色填充
+        ctx.fillStyle = gra;
+        points.forEach((point, index) => {
+          const { x, y } = point;
+          if (index === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        });
+        ctx.closePath();
+        ctx.fill();
+      }
+
+
+      /**
+       * 画V 槽外径
+       * @param box
+       * @param depth
+       * @returns {({gradient: {startPoint: {x: *, y: number}, stopPoint: {x: *, y}, stopColor: string, startColor: string}, points: [{x: number, y: number},{x, y},{x: *, y},{x: *, y: number}]}|{gradient: {startPoint: {x: *, y: *}, stopPoint: {x: *, y: *}, stopColor: string, startColor: string}, points: [{x: *, y: number},{x: *, y},{x: *, y: *},{x: *, y: *}]}|{gradient: {startPoint: {x: *, y}, stopPoint: {x: *, y: *}, stopColor: string, startColor: string}, points: [{x: number, y: *},{x, y: *},{x: *, y: *},{x: *, y: *}]}|{gradient: {startPoint: {x: number, y: *}, stopPoint: {x, y: *}, stopColor: string, startColor: string}, points: [{x: number, y: number},{x, y},{x, y: *},{x: number, y: *}]})[]}
+       */
+      function getOutterBorderSlices({ box, depth }) {
+        const radian = (rot * Math.PI) / 180;
+        const offset = depth * Math.cos(radian);
+        const { x, y, width, height } = box;
+        const top = {
+          points: [
+            {
+              x: x - offset,
+              y: y - offset,
+            },
+            {
+              x: x,
+              y: y,
+            },
+            {
+              x: x + width,
+              y: y,
+            },
+            {
+              x: x + width + offset,
+              y: y - offset,
+            },
+          ],
+          gradient: {
+            startColor: '#EEEEEE',
+            startPoint: {
+              x: x + width / 2,
+              y: y - offset
+            },
+            stopPoint: {
+              x: x + width / 2,
+              y: y
+            },
+            stopColor: '#CECECE'
+          }
+        };
+        const right = {
+          points: [
+            {
+              x: x + width + offset,
+              y: y - offset,
+            },
+            {
+              x: x + width,
+              y: y,
+            },
+            {
+              x: x + width,
+              y: y + height,
+            },
+            {
+              x: x + width + offset,
+              y: y + height + offset,
+            },
+          ],
+          gradient: {
+            startColor: '#D8D8D8',
+            startPoint: {
+              x: x + width,
+              y: y + height / 2
+            },
+            stopPoint: {
+              x: x + width + offset,
+              y: y + height / 2
+            },
+            stopColor: '#EEEEEE'
+          }
+        };
+        const bottom = {
+          points: [
+            {
+              x: x - offset,
+              y: y + height + offset,
+            },
+            {
+              x: x,
+              y: y + height,
+            },
+            {
+              x: x + width,
+              y: y + height,
+            },
+            {
+              x: x + width + offset,
+              y: y + height + offset,
+            },
+          ],
+          gradient: {
+            startColor: '#E7E7E7',
+            startPoint: {
+              x: x + width / 2,
+              y: y
+            },
+            stopPoint: {
+              x: x + width / 2,
+              y: y + offset
+            },
+            stopColor: '#F4F4F4'
+          }
+        };
+        const left = {
+          points: [
+            {
+              x: x - offset,
+              y: y - offset,
+            },
+            {
+              x: x,
+              y: y,
+            },
+            {
+              x: x,
+              y: y + height,
+            },
+            {
+              x: x - offset,
+              y: y + height + offset,
+            },
+          ],
+          gradient: {
+            startColor: '#F7F7F7',
+            startPoint: {
+              x: x - offset,
+              y: y + height / 2
+            },
+            stopPoint: {
+              x: x,
+              y: y + height / 2
+            },
+            stopColor: '#E8E8E8'
+          }
+        };
+        return [top, right, bottom, left];
+      }
+
+      /**
+       * 画V槽内径
+       * @param box
+       * @param depth
+       * @returns {({gradient: {startPoint: {x: *, y}, stopPoint: {x: *, y: *}, stopColor: string, startColor: string}, points: [{x, y},{x: *, y: *},{x: number, y: *},{x: *, y}]}|{gradient: {startPoint: {x: number, y: *}, stopPoint: {x: *, y: *}, stopColor: string, startColor: string}, points: [{x: *, y},{x: number, y: *},{x: number, y: number},{x: *, y: *}]}|{gradient: {startPoint: {x: *, y: number}, stopPoint: {x: *, y: *}, stopColor: string, startColor: string}, points: [{x, y: *},{x: *, y: number},{x: number, y: number},{x: *, y: *}]}|{gradient: {startPoint: {x, y: *}, stopPoint: {x: *, y: *}, stopColor: string, startColor: string}, points: [{x, y},{x: *, y: *},{x: *, y: number},{x, y: *}]})[]}
+       */
+      function getInnerBorderSlices({ box, depth }) {
+        const radian = ((90 - rot) * Math.PI) / 180;
+        const offset = depth * Math.cos(radian);
+        const { x, y, width, height } = box;
+        const top = {
+          points: [
+            {
+              x: x,
+              y: y,
+            },
+            {
+              x: x + offset,
+              y: y + offset,
+            },
+            {
+              x: x + width - offset,
+              y: y + offset,
+            },
+            {
+              x: x + width,
+              y: y,
+            },
+          ],
+          gradient: {
+            startColor: '#F0F0F0',
+            startPoint: {
+              x: x + width / 2,
+              y
+            },
+            stopPoint: {
+              x: x + width / 2,
+              y: y + offset
+            },
+            stopColor: '#F9F9F9'
+          }
+        };
+        const right = {
+          points: [
+            {
+              x: x + width ,
+              y: y,
+            },
+            {
+              x: x + width - offset,
+              y: y + offset,
+            },
+            {
+              x: x + width - offset,
+              y: y + height - offset,
+            },
+            {
+              x: x + width,
+              y: y + height,
+            },
+          ],
+          gradient: {
+            startColor: '#F6F6F6',
+            startPoint: {
+              x: x + width - offset,
+              y: y + height / 2
+            },
+            stopPoint: {
+              x: x + width,
+              y: y + height / 2
+            },
+            stopColor: '#E7E7E7'
+          }
+        };
+        const bottom = {
+          points: [
+            {
+              x: x,
+              y: y + height,
+            },
+            {
+              x: x + offset,
+              y: y + height - offset,
+            },
+            {
+              x: x + width - offset,
+              y: y + height - offset,
+            },
+            {
+              x: x + width,
+              y: y + height,
+            },
+          ],
+          gradient: {
+            startColor: '#DFDFDF',
+            startPoint: {
+              x: x + width / 2,
+              y: y + height - offset
+            },
+            stopPoint: {
+              x: x + width / 2,
+              y: y + height
+            },
+            stopColor: '#D5D5D5'
+          }
+        };
+        const left = {
+          points: [
+            {
+              x: x,
+              y: y,
+            },
+            {
+              x: x + offset,
+              y: y + offset,
+            },
+            {
+              x: x + offset,
+              y: y + height - offset,
+            },
+            {
+              x: x,
+              y: y + height,
+            },
+          ],
+          gradient: {
+            startColor: '#D9D9D9',
+            startPoint: {
+              x: x,
+              y: y + height / 2
+            },
+            stopPoint: {
+              x: x + offset,
+              y: y + height / 2
+            },
+            stopColor: '#E9E9E9'
+          }
+        };
+        return [top, right, bottom, left];
+      }
+
+      function drawOutterBorder({
+        boxes = [],
+        depth = 12,
+        ctx,
+      }) {
+        boxes.forEach((box) => {
+          const borderSlices = getOutterBorderSlices({ box, depth });
+          borderSlices.forEach((slice) => {
+            drawGrooveBorderSlice(ctx, slice);
+          });
+        });
+      }
+
+      function drawInnerBorder({
+        boxes = [],
+        depth = 12,
+        ctx,
+      }) {
+
+        boxes.forEach((box) => {
+        const innerBorderSlices = getInnerBorderSlices({ box, depth });
+        innerBorderSlices.forEach((slice) => {
+          drawGrooveBorderSlice(ctx, slice);
+        });
+        });
+     }
+
+
+      // V 槽外径
+      drawOutterBorder({ boxes: [box], ctx });
+
+      // V 槽内径
+      drawInnerBorder({ boxes: [box], ctx });
+
+    </script>
+  </body>
+</html>

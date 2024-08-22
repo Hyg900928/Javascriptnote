@@ -10,10 +10,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@svgdotjs/svg.js": "^3.2.0",
+    "ag-psd": "^19.0.1",
     "big-integer": "^1.6.51",
+    "canvas": "^2.11.2",
+    "cheerio": "^1.0.0-rc.12",
     "compressing": "^1.6.2",
+    "express": "^4.19.2",
+    "fs-extra": "^11.2.0",
+    "images": "^3.0.2",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
-    "rimraf": "^3.0.2"
+    "potrace": "^2.1.8",
+    "rimraf": "^3.0.2",
+    "svg-parser": "^2.0.4",
+    "svg2img": "^1.0.0-beta.2",
+    "svgdom": "^0.1.16",
+    "svgpath": "^2.6.0",
+    "xml2js": "^0.6.2"
   }
 }

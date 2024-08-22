@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "face-api.js": "^0.22.2",
     "konva": "^8.1.1",
     "mobx": "^6.10.0",
     "mobx-react": "^9.0.0",
@@ -15,7 +16,7 @@
     "react-konva": "^17.0.2-4",
     "react-quill": "^2.0.0",
     "react-scripts": "4.0.3",
-    "use-image": "^1.1.0",
+    "use-image": "^1.1.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

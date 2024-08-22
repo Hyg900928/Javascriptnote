@@ -1,68 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        body {
-            height: 10000px;
-        }
-
-        /*#btn {*/
-        /*  position: absolute;*/
-        /*  left: 50%;*/
-        /*  top: 2000px;*/
-        /*  transform: translateX(-50%);*/
-        /*}*/
-        p {
-            /*position: absolute;*/
-            /*left: 50%;*/
-            /*top: 2000px;*/
-            /*background: red;*/
-            /*transform: translateX(-50%);*/
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotate SVG Nodes</title>
+  <style>
+    /* 可以添加一些样式来定义SVG的容器 */
+    /*#svg-container {*/
+    /*  width: 200px;*/
+    /*  height: 200px;*/
+    /*  border: 1px solid black;*/
+    /*}*/
+  </style>
 </head>
 <body>
-<button id="btn">展示焦点</button>
-<p id="content"></p>
+<div id="svg-container">
+
+
+  <svg id="my-svg" data-name="my-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.3 731.3">
+    <defs>
+      <style>
+        .cls-1 {
+          fill: none;
+          stroke: #221714;
+          stroke-miterlimit: 10;
+          stroke-width: 2px;
+        }
+      </style>
+    </defs>
+    <g id="_图层_17" data-name="图层 17">
+      <rect class="cls-1" x="131.65" y="203.65" width="324" height="324"/>
+    </g>
+  </svg>
+</div>
+
+<script>
+  // 获取SVG和其中的节点
+  var svg = document.getElementById('my-svg');
+  var svgNodes = svg.childNodes;
+
+  // 定义旋转角度和旋转中心点
+  var angle = 40; // 旋转角度，以度为单位
+  var centerX = svg.width.baseVal.value / 2; // SVG中心点的X坐标
+  var centerY = svg.height.baseVal.value / 2; // SVG中心点的Y坐标
+
+  // 将每个节点按照指定的角度和中心点进行旋转
+  for (var i = 0; i < svgNodes.length; i++) {
+    var node = svgNodes[i];
+    if (node.nodeType === 1) { // 确保是元素节点
+      // 计算节点的中心点
+      var bbox = node.getBBox();
+      var nodeCenterX = bbox.x + bbox.width / 2;
+      var nodeCenterY = bbox.y + bbox.height / 2;
+
+      // 计算节点相对于SVG中心点的偏移量
+      var offsetX = nodeCenterX - centerX;
+      var offsetY = nodeCenterY - centerY;
+
+      // 计算节点相对于中心点的距离和角度
+      var distance = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
+      var nodeAngle = Math.atan2(offsetY, offsetX) * (180 / Math.PI);
+
+      // 应用旋转变换
+      var newAngle = nodeAngle + angle;
+      var newX = centerX + distance * Math.cos(newAngle * Math.PI / 180);
+      var newY = centerY + distance * Math.sin(newAngle * Math.PI / 180);
+
+      // 设置节点的新位置
+      node.setAttribute('transform', 'translate(' + newX + ',' + newY + ') rotate(' + angle + ')');
+    }
+  }
+</script>
 </body>
 </html>
-<script>
-    setInterval("myFunction()", 1);
-
-    function myFunction() {
-        const x = document.getElementById("content");
-        if (document.hasFocus()) {
-            x.innerHTML = "文档已获取焦点。";
-        } else {
-            x.innerHTML = "文档失去焦点。";
-        }
-    }
-
-    // 浮点数相加导致精度问题
-    const accAdd = (arg1, arg2) => {
-        let r1, r2, m;
-        try {
-            r1 = arg1.toString().split(".")[1].length
-            console.log('r1 ==> ', r1)
-        } catch (e) {
-            r1 = 0
-        }
-        try {
-            r2 = arg2.toString().split(".")[1].length
-            console.log('r2 ==> ', r2)
-        } catch (e) {
-            r2 = 0
-        }
-        m = Math.pow(10, Math.max(r1, r2))
-        console.log('m==>', m)
-        return (arg1 * m + arg2 * m) / m
-    }
-
-    const res = accAdd(9.36, 0.36)
-    console.log('res===>', res)
-
-</script>
-

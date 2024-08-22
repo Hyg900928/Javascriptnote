@@ -1,0 +1,68 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "element",
+      "tagName": "svg",
+      "properties": {
+        "id": "_0",
+        "data-name": 0,
+        "xmlns": "http://www.w3.org/2000/svg",
+        "viewBox": "0 0 587.3 731.3"
+      },
+      "children": [
+        {
+          "type": "element",
+          "tagName": "defs",
+          "properties": {},
+          "children": [
+            {
+              "type": "element",
+              "tagName": "style",
+              "properties": {},
+              "children": [
+                {
+                  "type": "text",
+                  "value": "\n      .cls-1 {\n        fill: none;\n        stroke: #221714;\n        stroke-miterlimit: 10;\n        stroke-width: 2px;\n      }\n    "
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "element",
+          "tagName": "g",
+          "properties": {
+            "id": "_图层_34",
+            "data-name": "图层 34"
+          },
+          "children": [
+            {
+              "type": "element",
+              "tagName": "g",
+              "properties": {
+                "id": "_图层_29",
+                "data-name": "图层 29"
+              },
+              "children": [
+                {
+                  "type": "element",
+                  "tagName": "rect",
+                  "properties": {
+                    "class": "cls-1",
+                    "x": 96.29,
+                    "y": 96.29,
+                    "width": 394.72,
+                    "height": 538.72
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    }
+  ]
+}

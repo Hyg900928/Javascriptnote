@@ -7,11 +7,12 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-    .element {
+    :root {
       --top: 8;
       --left: 7;
-      --width: 4;
-      --height: 2;
+      --width: 400px;
+      --height: 300px;
+      --background-color: red;
       --correctionTop: 0;
       --correctionLeft: 0;
       --correctionWidth: 0;
@@ -19,6 +20,11 @@
       --zIndex: 3;
       --ratio: 2;
       max-height: none;
+    }
+    .element {
+      width: var(--width);
+      height: var(--height);
+      background: var(--background-color);
     }
   </style>
 </head>

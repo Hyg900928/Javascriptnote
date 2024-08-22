@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Gradient Fill</title>
+</head>
+<body>
+<canvas id="myCanvas" width="500" height="500"></canvas>
+<script>
+  var canvas = document.getElementById('myCanvas');
+  var ctx = canvas.getContext('2d');
+
+  // 创建路径
+  ctx.beginPath();
+  ctx.moveTo(50, 50);
+  ctx.lineTo(450, 50);
+  ctx.lineTo(450, 450);
+  ctx.lineTo(50, 450);
+  ctx.closePath(); // 闭合路径
+
+  // 创建线性渐变
+  var gradient = ctx.createLinearGradient(75, 75, 75, 450);
+  gradient.addColorStop(0, '#fff');
+  gradient.addColorStop(1, '#DBDBDB');
+
+  // 将渐变设置为填充样式
+  ctx.fillStyle = gradient;
+
+  // 填充路径
+  ctx.fill();
+</script>
+</body>
+</html>

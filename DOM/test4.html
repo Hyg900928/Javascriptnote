@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resizable Div with Handles</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .resizable {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      border: 1px solid #ccc;
+      /*overflow: hidden;*/
+      cursor: move;
+    }
+
+    .handle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #3498db;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .top { top: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+    .right { top: 50%; right: -5px; transform: translateY(-50%); cursor: ew-resize; }
+    .bottom { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+    .left { top: 50%; left: -5px; transform: translateY(-50%); cursor: ew-resize; }
+
+    .top-left { top: -5px; left: -5px; cursor: nwse-resize; }
+    .top-right { top: -5px; right: -5px; cursor: nesw-resize; }
+    .bottom-left { bottom: -5px; left: -5px; cursor: nesw-resize; }
+    .bottom-right { bottom: -5px; right: -5px; cursor: nwse-resize; }
+
+
+
+
+  </style>
+</head>
+<body>
+
+<div class="resizable" id="myResizableDiv">
+  <div class="handle top" data-direction="top"></div>
+  <div class="handle right" data-direction="right"></div>
+  <div class="handle bottom" data-direction="bottom"></div>
+  <div class="handle left" data-direction="left"></div>
+  <div class="handle top-left" data-direction="top-left"></div>
+  <div class="handle top-right" data-direction="top-right"></div>
+  <div class="handle bottom-left" data-direction="bottom-left"></div>
+  <div class="handle bottom-right" data-direction="bottom-right"></div>
+  <p>Your content goes here</p>
+</div>
+
+<script src="test4.js"></script>
+</body>
+</html>

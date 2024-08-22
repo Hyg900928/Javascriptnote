@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" width="446" height="360"></canvas>
+  <div style="display: none;">
+    <img  id="source" src="./img2/1.png" alt="">
+  </div>
+</body>
+</html>
+<script>
+  const canvas = document.getElementById('canvas');
+  const image = document.getElementById("source");
+  const ctx  =canvas.getContext('2d');
+  const sWidth = 126;
+  const sHeight = 126;
+  const dWidth = 200;
+  const dHeight = 100;
+  image.addEventListener("load", (e) => {
+    const aspectRatio = sWidth / sHeight;
+    const dRatio = dWidth / dHeight;
+    let drawWidth, drawHeight;
+    if (dRatio > aspectRatio) {
+      drawWidth = dWidth;
+      drawHeight = drawWidth / aspectRatio;
+    } else {
+      drawWidth = dHeight * aspectRatio;
+      drawHeight = dHeight;
+    }
+    const x = (dWidth - drawWidth) / 2;
+    const y = (dHeight - drawHeight) / 2;
+    ctx.drawImage(image, x, y, sWidth, sHeight, 0, 0, drawWidth, drawHeight);
+  });
+
+</script>

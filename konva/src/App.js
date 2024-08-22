@@ -5,13 +5,15 @@ import React from 'react';
 // import UseEffectDemo from "./Components/Hooks/UseEffectDemo";
 // import QuillEditor from './Components/QuillEditor';
 import ScrollCanvas from './Components/konva/ScrollCanvas'
-import TransformerComponent from "./Components/TransformerComponent";
-
+// import TransformerComponent from "./Components/TransformerComponent";
+// import Progress from "./Components/Progress";
+// import GuideLine from "./Components/GuideLine";
+import ScratchCard from './Components/ScratchCard';
 class App extends React.Component {
   render() {
     return (
       <div>
-        <TransformerComponent />
+        <ScratchCard width={500} height={800} />
       </div>
     );
   }
